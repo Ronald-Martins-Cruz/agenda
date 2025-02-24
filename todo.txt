@@ -1,0 +1,7 @@
+Form:
+    validação do formulário
+    ajustar campos requireds
+    ajustar restrições de entrada (ano entre 1000 e 9999)
+
+
+Lançamentos de exceções no crud
