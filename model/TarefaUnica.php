@@ -14,6 +14,10 @@ class TarefaUnica extends Tarefa{
         $this->concluida = $concluida;
     }
 
+    public function horarioEspecifico(){
+        return isset($this->horario);
+    }
+
     public function calcularProdutividade(){
         return 1000000000000000000000;
         //alterar

@@ -1,8 +1,27 @@
 const mesesDoAno = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
-const concluirTarefa = async(id) => {
+const concluirTarefa = async(id,tipo) => {
     try {
-        response = await fetch(`/controller/concluirTarefa.php?id=${id}`, {
+        response = await fetch(`/controller/concluirTarefa.php?id=${id}&tipo=${tipo}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao obter dados do PHP');
+        }
+        
+    } catch (error) {
+        console.error('Erro:', error);
+    }
+
+}
+
+const desfazerTarefa = async(id,tipo) => {
+    try {
+        response = await fetch(`/controller/desfazerTarefa.php?id=${id}&tipo=${tipo}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -77,6 +96,7 @@ const exibirMes = async (mes, ano) =>{
     } catch (error) {
         console.error('Erro:', error);
     }
+    console.log(resultado);
     calendario.innerHTML = "";
     let i = 0;
     for(let data = new Date(dataInicial.getTime()); data<= dataFinal; data.setDate(data.getDate() + 1)){
@@ -110,7 +130,11 @@ const exibirMes = async (mes, ano) =>{
                 })
                 
                 const img = document.createElement("img");
-                img.src = "imagens/unchecked.png";
+                if(!tarefa.concluida){
+                    img.src = "imagens/unchecked.png";
+                }else{
+                    img.src = "imagens/checked.png"
+                }
                 img.classList.add("checked");
                 divTarefa.appendChild(img);
 
@@ -127,10 +151,10 @@ const exibirMes = async (mes, ano) =>{
                 img.addEventListener('click', function(){
                     if(img.src.includes('imagens/unchecked-hover.png') || img.src.includes('imagens/unchecked.png')){
                         img.src = 'imagens/checked.png';
-                        concluirTarefa(tarefa.id);
+                        concluirTarefa(tarefa.id, 'unica');
                     }else if(img.src.includes('imagens/checked.png')){
                         img.src = 'imagens/unchecked-hover.png';
-                        desfazerTarefa(tarefa.id);
+                        desfazerTarefa(tarefa.id, 'unica');
                     }
                 })
 
@@ -192,8 +216,6 @@ calendario.addEventListener("click", async function (event) {
         const tarefaId = tarefa.dataset.id;
         const tipo = tarefa.dataset.tipo;
 
-        if (!tarefaId) return;
-
         try {
             const response = await fetch(`/controller/excluirTarefa.php?id=${tarefaId}&tipo=${tipo}`, {
                 method: "DELETE"
@@ -206,6 +228,35 @@ calendario.addEventListener("click", async function (event) {
         } catch (error) {
             console.error("Erro ao excluir:", error);
         }
+    }
+});
+
+calendario.addEventListener("click", function (event) {
+        if (event.target.classList.contains("tarefa") ||
+        (event.target.classList.contains('nome') && event.target.parentNode.classList.contains("tarefa"))) { 
+        let tarefa = null;
+        if(event.target.classList.contains('nome')){
+            tarefa = event.target.parentNode;
+        }else{
+            tarefa = event.target;
+        }
+        const tarefaId = tarefa.dataset.id;
+        const tipo = tarefa.dataset.tipo;
+
+        console.log(tarefa);
+        /*
+        try {
+            const response = await fetch(`/controller/excluirTarefa.php?id=${tarefaId}&tipo=${tipo}`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+            mes = mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase());
+            ano = anoNoButton.innerText;
+            exibirMes(mes,ano);
+        } catch (error) {
+            console.error("Erro ao excluir:", error);
+        }*/
     }
 });
 //manipulando button para selecionar mês
@@ -507,3 +558,12 @@ checked.addEventListener('click', function(){
 function diasDoMes(mes, ano){
     return new Date(ano, mes, 0).getDate();
 }
+
+document.addEventListener("DOMContentLoaded",() =>{
+    dataAtual = new Date();
+    mes = dataAtual.getMonth();
+    ano = dataAtual.getFullYear();
+    mesNoButton.innerText = mesesDoAno[mes].toUpperCase();
+    anoNoButton.innerText = ano;
+    exibirMes(mes,ano);
+});

@@ -343,6 +343,21 @@ header button {
     display: none;
 }
 
+.atualizar-tarefa{
+    position: absolute;
+    top: 15%;
+    left: 35%;
+    height: 70%;
+    width: 30%;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1;
+    display: none;
+}
+
 .formulario {
     display: flex;
     flex-direction: column;

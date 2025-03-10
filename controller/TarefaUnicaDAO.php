@@ -10,17 +10,16 @@ class TarefaUnicaDAO{
 
     function inserir(TarefaUnica $tarefaUnica){
         $pdo = criarPDO();
-        if($tarefaUnica->getHorario() == null){
+        if($tarefaUnica->horarioEspecifico()){
             $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
             $ps = $pdo->prepare($sql);
             $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
             return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
-        }elseif($tarefaUnica->getHorario() != null){
-            $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario) VALUES (?,?,?,?,?)';
+        }elseif(!$tarefaUnica->horarioEspecifico()){
+            $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
             $ps = $pdo->prepare($sql);
             $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-            $horarioFormatado = $tarefaUnica->getHorario()->format('H:i');
-            return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horarioFormatado]);
+            return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
         }
     }
 
@@ -35,6 +34,20 @@ class TarefaUnicaDAO{
 
     function excluirTarefa(int $id){
         $sql = 'DELETE FROM tarefa_unica WHERE id = ?';
+        $pdo = criarPDO();
+        $ps = $pdo->prepare($sql);
+        return $ps->execute([$id]);
+    }
+
+    function concluirTarefa(int $id){
+        $sql = 'UPDATE tarefa_unica SET concluida = true where ID = ?';
+        $pdo = criarPDO();
+        $ps = $pdo->prepare($sql);
+        return $ps->execute([$id]);
+    }
+
+    function desfazerTarefa(int $id){
+        $sql = 'UPDATE tarefa_unica SET concluida = false where ID = ?';
         $pdo = criarPDO();
         $ps = $pdo->prepare($sql);
         return $ps->execute([$id]);

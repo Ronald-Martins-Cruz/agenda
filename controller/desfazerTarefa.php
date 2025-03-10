@@ -8,8 +8,10 @@ $tipo = (isset($_GET['tipo']))? $_GET['tipo']: "";
 if($id > 0){
     if($tipo == 'unica'){
         $tarefaUnicaDAO = new TarefaUnicaDAO();
-        $tarefaUnicaDAO->concluirTarefa($id);
+        $tarefaUnicaDAO->desfazerTarefa($id);
     }
 }
+
+
 
 ?>
