@@ -559,11 +559,14 @@ function diasDoMes(mes, ano){
     return new Date(ano, mes, 0).getDate();
 }
 
+
+
 document.addEventListener("DOMContentLoaded",() =>{
     dataAtual = new Date();
     mes = dataAtual.getMonth();
     ano = dataAtual.getFullYear();
     mesNoButton.innerText = mesesDoAno[mes].toUpperCase();
     anoNoButton.innerText = ano;
+    numeroAno.innerText = dataAtual.getFullYear();
     exibirMes(mes,ano);
 });
