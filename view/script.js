@@ -447,12 +447,18 @@ anoPosterior.addEventListener('click', () => {
 
 //escolhendo tipo de repetição
 const repeticao = document.getElementById('repeticao');
+const dataLabel = document.querySelector('.dataLabel');
 
 repeticao.addEventListener('change', function () {
     const tipoRepeticao = this.value;
     
-    document.getElementById('diasSemana').classList.toggle('hidden', tipoRepeticao !== 'semanal');
+    document.getElementById('diasSemana').classList.toggle('hidden', tipoRepeticao === 'unica');
     document.getElementById('diasSemana').classList.toggle('diasSemana', tipoRepeticao === 'semanal');
+    if(tipoRepeticao === 'semanal'){
+        dataLabel.innerText = 'Data Inicial: ';
+    }else if(tipoRepeticao === 'unica'){
+        dataLabel.innerText = 'Data: ';
+    }
 
     //document.getElementById('diasMes').classList.toggle('hidden', tipoRepeticao !== 'mensal');
 });
@@ -471,6 +477,16 @@ inputsRadio.forEach((radio) => {
         }
     })
 });
+
+const inputHorario = document.querySelector('#horario');
+
+const requerido = function( tipoHorario ){
+    if(tipoHorario == 'especifico'){
+        inputHorario.setAttribute("required", true);
+    }else{
+        inputHorario.removeAttribute("required");
+    }
+}
 
 //chamando o formulário a partir do clique num elemento do tipo "dia"
 
@@ -525,33 +541,12 @@ body.addEventListener('click', function (e){
     }
 })
 
-//manipulando a classe .tarefa
-/*
-const tarefa = document.querySelector('.tarefa');
-tarefa.addEventListener('click', function(){
+const closeBtn = document.querySelector('.close');
+
+closeBtn.addEventListener('click', () => {
     criarTarefa.style.display = 'none';
-    k = 200; 
+    k = -1;
 })
-
-const checked = document.querySelector('.checked');
-
-checked.addEventListener('mouseover', function(){
-    if(!checked.src.includes('imagens/checked.png'))
-        checked.src = 'imagens/unchecked-hover.png';
-})
-
-checked.addEventListener('mouseout', function(){
-    if(checked.src.includes('imagens/unchecked-hover.png'))
-        checked.src = 'imagens/unchecked.png';
-})
-
-checked.addEventListener('click', function(){
-    if(checked.src.includes('imagens/unchecked-hover.png') || checked.src.includes('imagens/unchecked.png')){
-        checked.src = 'imagens/checked.png';
-    }else if(checked.src.includes('imagens/checked.png')){
-        checked.src = 'imagens/unchecked-hover.png';
-    }
-})*/
 
 //Fazendo a exibição do mês
 
@@ -560,6 +555,7 @@ function diasDoMes(mes, ano){
 }
 
 
+//exibicao inicial da página
 
 document.addEventListener("DOMContentLoaded",() =>{
     dataAtual = new Date();

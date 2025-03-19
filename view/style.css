@@ -325,14 +325,11 @@ header button {
             ESTILIZANDO A CRIAÇÃO DE TAREFAS
 */
 
-
-
-
 .criar-tarefa {
     position: absolute;
     top: 15%;
     left: 35%;
-    height: 70%;
+    height: 80%;
     width: 30%;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
@@ -347,7 +344,7 @@ header button {
     position: absolute;
     top: 15%;
     left: 35%;
-    height: 70%;
+    height: 80%;
     width: 30%;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
@@ -358,10 +355,30 @@ header button {
     display: none;
 }
 
-.formulario {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+#nome {
+    width: 95%;
+}
+
+.criar-tarefa textarea {
+    resize: none;
+    height: 100px;
+    width: 95%;
+}
+
+#criar {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.criar-tarefa button:hover {
+    background: #0056b3;
 }
 
 .campo-texto, 
@@ -380,6 +397,17 @@ header button {
     border-color: #007bff; 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
+input[type="radio"] {
+    margin-bottom: 15px;
+}
+
+#horario{
+    margin-bottom: 15px;
+}
+  
+
+  
 
 .campo-area{
     resize: none;
@@ -405,7 +433,7 @@ header button {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
 }
   
 .diasSemana input{
@@ -424,6 +452,7 @@ header button {
     font-weight: bold;
     color: #333;
     transition: background-color 0.3s;
+    margin-bottom: 20px;
 }
   
 .diasSemana input:checked + label {
@@ -492,4 +521,22 @@ header button {
 
 #horario{
     display: none;
+}
+
+.close{
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.close img{
+    height: 15px;
+    width: 15px;
 }
