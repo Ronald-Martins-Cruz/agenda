@@ -96,16 +96,24 @@ const exibirMes = async (mes, ano) =>{
     } catch (error) {
         console.error('Erro:', error);
     }
-    console.log(resultado);
+    /*console.log(resultado);*/
     calendario.innerHTML = "";
     let i = 0;
     for(let data = new Date(dataInicial.getTime()); data<= dataFinal; data.setDate(data.getDate() + 1)){
+        const anoData = data.getFullYear();
+        const mesData = String(data.getMonth() + 1).padStart(2, '0');
+        const diaData = String(data.getDate()).padStart(2, '0');
         const iesimoDia = document.createElement("div");
         iesimoDia.classList.add('dia');
 
+        iesimoDia.dataset.dia = `${anoData}-${mesData}-${diaData}`;
+
         iesimoDia.addEventListener('click', () => {
             criarTarefa.style.display = 'block';
+            const dataForm = document.querySelector('#dataInicial');
+            dataForm.value = iesimoDia.dataset.dia;
         })
+
 
         const numeroDia = document.createElement("p");
         if(data.getMonth() != mes){
@@ -196,6 +204,9 @@ const exibirMes = async (mes, ano) =>{
             default:
                 break;
         }
+        
+
+
         i++;
         calendario.appendChild(iesimoDia);
     }
@@ -231,34 +242,7 @@ calendario.addEventListener("click", async function (event) {
     }
 });
 
-calendario.addEventListener("click", function (event) {
-        if (event.target.classList.contains("tarefa") ||
-        (event.target.classList.contains('nome') && event.target.parentNode.classList.contains("tarefa"))) { 
-        let tarefa = null;
-        if(event.target.classList.contains('nome')){
-            tarefa = event.target.parentNode;
-        }else{
-            tarefa = event.target;
-        }
-        const tarefaId = tarefa.dataset.id;
-        const tipo = tarefa.dataset.tipo;
 
-        console.log(tarefa);
-        /*
-        try {
-            const response = await fetch(`/controller/excluirTarefa.php?id=${tarefaId}&tipo=${tipo}`, {
-                method: "DELETE"
-            });
-
-            const data = await response.json();
-            mes = mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase());
-            ano = anoNoButton.innerText;
-            exibirMes(mes,ano);
-        } catch (error) {
-            console.error("Erro ao excluir:", error);
-        }*/
-    }
-});
 //manipulando button para selecionar mês
 
 const selecionarMes = document.querySelector('.selecionar-mes');
@@ -488,22 +472,9 @@ const requerido = function( tipoHorario ){
     }
 }
 
-//chamando o formulário a partir do clique num elemento do tipo "dia"
-
-//const calendario = document.querySelector('.calendario');
 const criarTarefa = document.querySelector('.criar-tarefa');
 
 let k = 0;
-
-/*
-Array.from(calendario.children).forEach(child => {
-    if (child.classList.contains('dia')){
-        child.addEventListener('click', function (){
-            criarTarefa.style.display = 'block';
-        })
-    }
-})
-*/
 
 const header = document.querySelector("header");
 
