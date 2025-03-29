@@ -325,7 +325,8 @@ header button {
             ESTILIZANDO A CRIAÇÃO DE TAREFAS
 */
 
-.criar-tarefa {
+.criar-tarefa,
+.atualizar-tarefa {
     position: absolute;
     top: 15%;
     left: 35%;
@@ -359,7 +360,8 @@ header button {
     width: 95%;
 }
 
-.criar-tarefa textarea {
+.criar-tarefa textarea,
+.atualizar-tarefa textarea {
     resize: none;
     height: 100px;
     width: 95%;
@@ -377,7 +379,8 @@ header button {
     margin-top: 10px;
 }
 
-.criar-tarefa button:hover {
+.criar-tarefa button:hover,
+.atualizar-tarefa button:hover {
     background: #0056b3;
 }
 

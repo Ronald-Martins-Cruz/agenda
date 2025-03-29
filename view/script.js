@@ -38,6 +38,8 @@ const desfazerTarefa = async(id,tipo) => {
 
 }
 
+/*const atualizarTarefa = document.querySelector('.atualizar-tarefa');*/
+
 const exibirMes = async (mes, ano) =>{
     const diasMes = diasDoMes(mes + 1, ano);
     let diasMesAnterior = -999;
@@ -177,6 +179,11 @@ const exibirMes = async (mes, ano) =>{
 
                 divTarefa.appendChild(times);
                 iesimoDia.appendChild(divTarefa);
+
+                /*divTarefa.addEventListener('click', (e) => {
+                    atualizarTarefa.style.display = 'block';
+                    e.stopPropagation();
+                })*/
             }
         )
         switch(i){
@@ -218,6 +225,12 @@ function criarLegenda(diaLegenda, iesimoDia){
     legenda.innerText = diaLegenda;
     iesimoDia.appendChild(legenda);
 }
+
+/*document.addEventListener("click", (e) => {
+    if (!atualizarTarefa.contains(e.target) && !e.target.classList.contains('tarefa')) {
+        atualizarTarefa.style.display = "none";
+    }
+});*/
 
 const calendario = document.querySelector('.calendario');
 

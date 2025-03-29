@@ -6,7 +6,7 @@ abstract class Tarefa{
     private String $nome;
     private String $descricao;
     private \DateTime $dataInicial;
-    private \DateTime $horario;
+    private ?\DateTime $horario = null;
     private float $peso;
 
     public function getNome(): string {
@@ -49,7 +49,6 @@ abstract class Tarefa{
         $this->peso = $peso;
     }
 
-    abstract public function calcularProdutividade();
 }
 
 ?>

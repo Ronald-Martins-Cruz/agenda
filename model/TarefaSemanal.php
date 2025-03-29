@@ -3,11 +3,16 @@
 namespace model;
 
 
-class TarefaSemanal extends Tarefa{
+class TarefaSemanal extends Tarefa implements ProdutividadeMensuravel{
     private array $diasDaSemana;
     private \DateTime $dataFinal;
     private int $qtdConclusoes;
     private array $cancelamentos;
+
+    public function calcularProdutividade(){
+        return 0;
+        //mudar
+    }
 
     public function getDiasDaSemana(): array {
         return $this->diasDaSemana;

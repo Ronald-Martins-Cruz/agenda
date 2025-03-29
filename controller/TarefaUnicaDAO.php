@@ -11,10 +11,11 @@ class TarefaUnicaDAO{
     function inserir(TarefaUnica $tarefaUnica){
         $pdo = criarPDO();
         if($tarefaUnica->horarioEspecifico()){
-            $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
+            $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario) VALUES (?,?,?,?,?)';
             $ps = $pdo->prepare($sql);
             $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-            return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
+            $horario = $tarefaUnica->getHorario()->format('H:i:s');
+            return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()],$horario);
         }elseif(!$tarefaUnica->horarioEspecifico()){
             $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
             $ps = $pdo->prepare($sql);

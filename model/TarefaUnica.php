@@ -15,12 +15,7 @@ class TarefaUnica extends Tarefa{
     }
 
     public function horarioEspecifico(){
-        return isset($this->horario);
-    }
-
-    public function calcularProdutividade(){
-        return 1000000000000000000000;
-        //alterar
+        return !is_null($this->horario);
     }
 
     public function __construct(String $nome, String $descricao, \DateTime $dataInicial, float $peso){
