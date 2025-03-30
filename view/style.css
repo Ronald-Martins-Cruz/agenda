@@ -332,6 +332,7 @@ header button {
     left: 35%;
     height: 80%;
     width: 30%;
+    min-width: 400px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -542,4 +543,17 @@ input[type="radio"] {
 .close img{
     height: 15px;
     width: 15px;
+}
+
+.teste{
+    z-index: 1;
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    width: 300px;
+    height: 300px;
+    color: white;
+    background-color: black;
+    text-align: center;
+    display: none;
 }

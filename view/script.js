@@ -1,6 +1,6 @@
 const mesesDoAno = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
-const concluirTarefa = async(id,tipo) => {
+const concluirTarefa = async (id, tipo) => {
     try {
         response = await fetch(`/controller/concluirTarefa.php?id=${id}&tipo=${tipo}`, {
             method: 'PUT',
@@ -12,14 +12,14 @@ const concluirTarefa = async(id,tipo) => {
         if (!response.ok) {
             throw new Error('Erro ao obter dados do PHP');
         }
-        
+
     } catch (error) {
         console.error('Erro:', error);
     }
 
 }
 
-const desfazerTarefa = async(id,tipo) => {
+const desfazerTarefa = async (id, tipo) => {
     try {
         response = await fetch(`/controller/desfazerTarefa.php?id=${id}&tipo=${tipo}`, {
             method: 'PUT',
@@ -31,21 +31,22 @@ const desfazerTarefa = async(id,tipo) => {
         if (!response.ok) {
             throw new Error('Erro ao obter dados do PHP');
         }
-        
+
     } catch (error) {
         console.error('Erro:', error);
     }
 
 }
 
-/*const atualizarTarefa = document.querySelector('.atualizar-tarefa');*/
+/*const teste = document.querySelector('.teste');*/
+const atualizarTarefa = document.querySelector('.atualizar-tarefa');
 
-const exibirMes = async (mes, ano) =>{
+const exibirMes = async (mes, ano) => {
     const diasMes = diasDoMes(mes + 1, ano);
     let diasMesAnterior = -999;
-    if(mes != 0){
+    if (mes != 0) {
         diasMesAnterior = diasDoMes(mes, ano);
-    }else{
+    } else {
         diasMesAnterior = diasDoMes(12, ano - 1);
     }
 
@@ -57,13 +58,13 @@ const exibirMes = async (mes, ano) =>{
     const diaSemana = data.getDay();
 
     const anoAtual = ano;
-    const mesAnterior = (mes != 0)? mes -1: 11;
-    const anoDoMesAnterior = (mesAnterior != 11)? anoAtual: anoAtual - 1;
-    const mesPosterior = (mes != 11)? mes +1: 0;
-    const anoDoMesPosterior = (mesPosterior != 0)? anoAtual: Number(anoAtual) + 1;
+    const mesAnterior = (mes != 0) ? mes - 1 : 11;
+    const anoDoMesAnterior = (mesAnterior != 11) ? anoAtual : anoAtual - 1;
+    const mesPosterior = (mes != 11) ? mes + 1 : 0;
+    const anoDoMesPosterior = (mesPosterior != 0) ? anoAtual : Number(anoAtual) + 1;
 
-    const dataInicial = (diaSemana == 0)? new Date(anoAtual, mes, 1): 
-    new Date(anoDoMesAnterior, mesAnterior, diasMesAnterior - diaSemana + 1);
+    const dataInicial = (diaSemana == 0) ? new Date(anoAtual, mes, 1) :
+        new Date(anoDoMesAnterior, mesAnterior, diasMesAnterior - diaSemana + 1);
 
     const dataFinal = new Date(dataInicial.getTime());
 
@@ -86,7 +87,7 @@ const exibirMes = async (mes, ano) =>{
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(dados) 
+            body: JSON.stringify(dados)
         });
 
         if (!response.ok) {
@@ -94,14 +95,14 @@ const exibirMes = async (mes, ano) =>{
         }
 
         resultado = await response.json();
-        
+
     } catch (error) {
         console.error('Erro:', error);
     }
     /*console.log(resultado);*/
     calendario.innerHTML = "";
     let i = 0;
-    for(let data = new Date(dataInicial.getTime()); data<= dataFinal; data.setDate(data.getDate() + 1)){
+    for (let data = new Date(dataInicial.getTime()); data <= dataFinal; data.setDate(data.getDate() + 1)) {
         const anoData = data.getFullYear();
         const mesData = String(data.getMonth() + 1).padStart(2, '0');
         const diaData = String(data.getDate()).padStart(2, '0');
@@ -118,75 +119,84 @@ const exibirMes = async (mes, ano) =>{
 
 
         const numeroDia = document.createElement("p");
-        if(data.getMonth() != mes){
+        if (data.getMonth() != mes) {
             numeroDia.classList.add("numero-dia-opaco");
-        }else{
+        } else {
             numeroDia.classList.add("numero-dia");
         }
         numeroDia.innerText = data.getDate();
 
         iesimoDia.appendChild(numeroDia);
-        
+
         resultado['unica'][i].forEach(tarefa => {
-                const divTarefa = document.createElement("div");
-                divTarefa.classList.add("tarefa");
-                
-                divTarefa.dataset.id = tarefa.id;
-                divTarefa.dataset.tipo = 'unica';
+            const divTarefa = document.createElement("div");
+            divTarefa.classList.add("tarefa");
 
-                divTarefa.addEventListener('click', () =>{
-                    criarTarefa.style.display = 'none';
-                    k = 200;
-                })
-                
-                const img = document.createElement("img");
-                if(!tarefa.concluida){
-                    img.src = "imagens/unchecked.png";
-                }else{
-                    img.src = "imagens/checked.png"
-                }
-                img.classList.add("checked");
-                divTarefa.appendChild(img);
+            divTarefa.dataset.id = tarefa.id;
+            divTarefa.dataset.tipo = 'unica';
 
-                img.addEventListener('mouseover', function(){
-                    if(!img.src.includes('imagens/checked.png'))
-                        img.src = 'imagens/unchecked-hover.png';
-                })
-                
-                img.addEventListener('mouseout', function(){
-                    if(img.src.includes('imagens/unchecked-hover.png'))
-                        img.src = 'imagens/unchecked.png';
-                })
-                
-                img.addEventListener('click', function(){
-                    if(img.src.includes('imagens/unchecked-hover.png') || img.src.includes('imagens/unchecked.png')){
-                        img.src = 'imagens/checked.png';
-                        concluirTarefa(tarefa.id, 'unica');
-                    }else if(img.src.includes('imagens/checked.png')){
-                        img.src = 'imagens/unchecked-hover.png';
-                        desfazerTarefa(tarefa.id, 'unica');
-                    }
-                })
+            divTarefa.addEventListener('click', () => {
+                criarTarefa.style.display = 'none';
+                k = 200;
+            })
 
-                const nome = document.createElement("p");
-                nome.classList.add("nome");
-                nome.innerText = tarefa.nome;
-                divTarefa.appendChild(nome);
-
-                const times = document.createElement("span");
-                times.classList.add('delete');
-                times.innerHTML = "&times;";
-
-                divTarefa.appendChild(times);
-                iesimoDia.appendChild(divTarefa);
-
-                /*divTarefa.addEventListener('click', (e) => {
+            divTarefa.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (e.target.classList.contains('tarefa') ||
+                    (e.target.parentNode.classList.contains('tarefa') && !e.target.classList.contains('delete')
+                        && e.target.tagName != 'IMG')) {
                     atualizarTarefa.style.display = 'block';
-                    e.stopPropagation();
-                })*/
+                }
+            })
+
+            const img = document.createElement("img");
+            if (!tarefa.concluida) {
+                img.src = "imagens/unchecked.png";
+            } else {
+                img.src = "imagens/checked.png"
             }
+            img.classList.add("checked");
+            divTarefa.appendChild(img);
+
+            img.addEventListener('mouseover', function () {
+                if (!img.src.includes('imagens/checked.png'))
+                    img.src = 'imagens/unchecked-hover.png';
+            })
+
+            img.addEventListener('mouseout', function () {
+                if (img.src.includes('imagens/unchecked-hover.png'))
+                    img.src = 'imagens/unchecked.png';
+            })
+
+            img.addEventListener('click', function () {
+                if (img.src.includes('imagens/unchecked-hover.png') || img.src.includes('imagens/unchecked.png')) {
+                    img.src = 'imagens/checked.png';
+                    concluirTarefa(tarefa.id, 'unica');
+                } else if (img.src.includes('imagens/checked.png')) {
+                    img.src = 'imagens/unchecked-hover.png';
+                    desfazerTarefa(tarefa.id, 'unica');
+                }
+            })
+
+            const nome = document.createElement("p");
+            nome.classList.add("nome");
+            nome.innerText = tarefa.nome;
+            divTarefa.appendChild(nome);
+
+            const times = document.createElement("span");
+            times.classList.add('delete');
+            times.innerHTML = "&times;";
+
+            divTarefa.appendChild(times);
+            iesimoDia.appendChild(divTarefa);
+
+            /*divTarefa.addEventListener('click', (e) => {
+                atualizarTarefa.style.display = 'block';
+                e.stopPropagation();
+            })*/
+        }
         )
-        switch(i){
+        switch (i) {
             case 0:
                 criarLegenda('dom', iesimoDia);
                 break;
@@ -211,7 +221,7 @@ const exibirMes = async (mes, ano) =>{
             default:
                 break;
         }
-        
+
 
 
         i++;
@@ -219,7 +229,7 @@ const exibirMes = async (mes, ano) =>{
     }
 }
 
-function criarLegenda(diaLegenda, iesimoDia){
+function criarLegenda(diaLegenda, iesimoDia) {
     const legenda = document.createElement('p');
     legenda.classList.add("legenda");
     legenda.innerText = diaLegenda;
@@ -235,8 +245,8 @@ function criarLegenda(diaLegenda, iesimoDia){
 const calendario = document.querySelector('.calendario');
 
 calendario.addEventListener("click", async function (event) {
-    if (event.target.classList.contains("delete")) { 
-        const tarefa = event.target.closest(".tarefa"); 
+    if (event.target.classList.contains("delete")) {
+        const tarefa = event.target.closest(".tarefa");
         const tarefaId = tarefa.dataset.id;
         const tipo = tarefa.dataset.tipo;
 
@@ -248,7 +258,7 @@ calendario.addEventListener("click", async function (event) {
             const data = await response.json();
             mes = mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase());
             ano = anoNoButton.innerText;
-            exibirMes(mes,ano);
+            exibirMes(mes, ano);
         } catch (error) {
             console.error("Erro ao excluir:", error);
         }
@@ -383,7 +393,7 @@ ir.addEventListener('click', () => {
             mesNoButton.innerHTML = mesesDoAno[j].toUpperCase();
             exibirMes(j, anoNoButton.innerHTML);
             break;
-        }else if(mes.toLowerCase() == mesNoButton.innerHTML.toLowerCase() && mesNoButton.innerHTML.toLowerCase() == 'dezembro'){
+        } else if (mes.toLowerCase() == mesNoButton.innerHTML.toLowerCase() && mesNoButton.innerHTML.toLowerCase() == 'dezembro') {
             mesNoButton.innerHTML = mesesDoAno[0].toUpperCase();
             anoNoButton.innerHTML = Number(anoNoButton.innerHTML) + 1;
             exibirMes(0, anoNoButton.innerHTML);
@@ -405,12 +415,12 @@ voltar.addEventListener('mouseout', () => {
 
 voltar.addEventListener('click', () => {
     let passouNoElse = false;
-    mesesDoAno.forEach((mes, i) => {    
+    mesesDoAno.forEach((mes, i) => {
         if (mes.toLowerCase() == mesNoButton.innerHTML.toLowerCase() && mesNoButton.innerHTML.toLowerCase() != 'janeiro' && !passouNoElse) {
             let j = i - 1;
             mesNoButton.innerHTML = mesesDoAno[j].toUpperCase();
             exibirMes(j, anoNoButton.innerHTML);
-        }else if (mes.toLowerCase() == mesNoButton.innerHTML.toLowerCase() && mesNoButton.innerHTML.toLowerCase() == 'janeiro'){
+        } else if (mes.toLowerCase() == mesNoButton.innerHTML.toLowerCase() && mesNoButton.innerHTML.toLowerCase() == 'janeiro') {
             mesNoButton.innerHTML = mesesDoAno[11].toUpperCase();
             anoNoButton.innerHTML = Number(anoNoButton.innerHTML) - 1;
             exibirMes(11, anoNoButton.innerHTML);
@@ -448,12 +458,12 @@ const dataLabel = document.querySelector('.dataLabel');
 
 repeticao.addEventListener('change', function () {
     const tipoRepeticao = this.value;
-    
+
     document.getElementById('diasSemana').classList.toggle('hidden', tipoRepeticao === 'unica');
     document.getElementById('diasSemana').classList.toggle('diasSemana', tipoRepeticao === 'semanal');
-    if(tipoRepeticao === 'semanal'){
+    if (tipoRepeticao === 'semanal') {
         dataLabel.innerText = 'Data Inicial: ';
-    }else if(tipoRepeticao === 'unica'){
+    } else if (tipoRepeticao === 'unica') {
         dataLabel.innerText = 'Data: ';
     }
 
@@ -467,9 +477,9 @@ const horario = document.querySelector('#horario');
 
 inputsRadio.forEach((radio) => {
     radio.addEventListener('change', function (e) {
-        if(e.target.value == 'especifico'){
+        if (e.target.value == 'especifico') {
             horario.style.display = 'block';
-        }else{
+        } else {
             horario.style.display = 'none';
         }
     })
@@ -477,10 +487,10 @@ inputsRadio.forEach((radio) => {
 
 const inputHorario = document.querySelector('#horario');
 
-const requerido = function( tipoHorario ){
-    if(tipoHorario == 'especifico'){
+const requerido = function (tipoHorario) {
+    if (tipoHorario == 'especifico') {
         inputHorario.setAttribute("required", true);
-    }else{
+    } else {
         inputHorario.removeAttribute("required");
     }
 }
@@ -491,14 +501,14 @@ let k = 0;
 
 const header = document.querySelector("header");
 
-header.addEventListener('click', function(){
+header.addEventListener('click', function () {
     criarTarefa.style.display = 'none';
     k = -1;
 })
 
 const calculo = document.querySelector('.calculo');
 
-calculo.addEventListener('click', function(){
+calculo.addEventListener('click', function () {
     criarTarefa.style.display = 'none';
     k = -1;
 })
@@ -507,46 +517,59 @@ body = document.body;
 
 let clicouNoForm = false;
 
-body.addEventListener('click', function (e){
+body.addEventListener('click', function (e) {
     k++;
-    if(k > 1 && criarTarefa.style.display == 'block'){
+    if (k > 1 && criarTarefa.style.display == 'block') {
         clicouNoForm = false;
         let node = e.target;
-        while(node.tagName.toLowerCase() != 'body'){
-            if(node.classList.contains("criar-tarefa")){
+        while (node.tagName.toLowerCase() != 'body') {
+            if (node.classList.contains("criar-tarefa")) {
                 clicouNoForm = true;
             }
             node = node.parentNode;
         }
-        if(!clicouNoForm){
+        if (!clicouNoForm) {
             criarTarefa.style.display = 'none';
             k = 0;
         }
     }
 })
 
-const closeBtn = document.querySelector('.close');
+const closeBtns = document.querySelectorAll('.close');
 
-closeBtn.addEventListener('click', () => {
-    criarTarefa.style.display = 'none';
-    k = -1;
+closeBtns.forEach(closeBtn => {
+    closeBtn.addEventListener('click', () => {
+        criarTarefa.style.display = 'none';
+        atualizarTarefa.style.display = 'none';
+        k = -1;
+    })
 })
 
 //Fazendo a exibição do mês
 
-function diasDoMes(mes, ano){
+function diasDoMes(mes, ano) {
     return new Date(ano, mes, 0).getDate();
 }
 
-
 //exibicao inicial da página
 
-document.addEventListener("DOMContentLoaded",() =>{
+document.addEventListener("DOMContentLoaded", () => {
     dataAtual = new Date();
     mes = dataAtual.getMonth();
     ano = dataAtual.getFullYear();
     mesNoButton.innerText = mesesDoAno[mes].toUpperCase();
     anoNoButton.innerText = ano;
     numeroAno.innerText = dataAtual.getFullYear();
-    exibirMes(mes,ano);
+    exibirMes(mes, ano);
 });
+
+document.addEventListener('click', (e) => {
+    if (atualizarTarefa.style.display == 'block' && !e.target.classList.contains('atualizar-tarefa')
+        && !(e.target.classList.contains('tarefa') ||
+            (e.target.parentNode.classList.contains('tarefa') && !e.target.classList.contains('delete')
+                && e.target.tagName != 'IMG'))) {
+        atualizarTarefa.style.display = 'none';
+        criarTarefa.style.display = 'none';
+        k = -1;
+    }
+})

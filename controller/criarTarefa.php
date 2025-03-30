@@ -6,7 +6,7 @@ use model\TarefaUnica;
 
 
 if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['repeticao']) && $_POST['repeticao'] == 'unica'){
-    //inlcuir htmlspecialchars e considerar a possibilidade de campos vazios
+    
     $nome = htmlspecialchars(isset($_POST['nome'])? $_POST['nome']: '');
     $descricao = htmlspecialchars(isset($_POST['descricao'])? $_POST['descricao']: '');
     $data = isset($_POST['dataInicial'])? new \DateTime($_POST['dataInicial']): null;

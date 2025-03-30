@@ -15,14 +15,14 @@ class TarefaUnicaDAO{
                 $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
                 $ps = $pdo->prepare($sql);
                 $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-                return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
+                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
 
             }else{
                 $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario) VALUES (?,?,?,?,?)';
                 $ps = $pdo->prepare($sql);
                 $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
                 $horario = $tarefaUnica->getHorario()->format('H:i:s');
-                return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario]);
+                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario]);
             }
         }catch(Exception $e){
             echo('Não foi possível inserir a tarefa');
