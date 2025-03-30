@@ -9,18 +9,23 @@ class TarefaUnicaDAO{
     public function __construct(){}
 
     function inserir(TarefaUnica $tarefaUnica){
-        $pdo = criarPDO();
-        if($tarefaUnica->horarioEspecifico()){
-            $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario) VALUES (?,?,?,?,?)';
-            $ps = $pdo->prepare($sql);
-            $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-            $horario = $tarefaUnica->getHorario()->format('H:i:s');
-            return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()],$horario);
-        }elseif(!$tarefaUnica->horarioEspecifico()){
-            $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
-            $ps = $pdo->prepare($sql);
-            $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-            return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
+        try{
+            $pdo = criarPDO();
+            if($tarefaUnica->getHorario()->format('Y-m-d H:i:s') == '1000-12-25 00:00:00'){
+                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
+                $ps = $pdo->prepare($sql);
+                $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
+                return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
+
+            }else{
+                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario) VALUES (?,?,?,?,?)';
+                $ps = $pdo->prepare($sql);
+                $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
+                $horario = $tarefaUnica->getHorario()->format('H:i:s');
+                return $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario]);
+            }
+        }catch(Exception $e){
+            echo('Não foi possível inserir a tarefa');
         }
     }
 

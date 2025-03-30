@@ -7,9 +7,16 @@ use model\TarefaUnica;
 
 if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['repeticao']) && $_POST['repeticao'] == 'unica'){
     //inlcuir htmlspecialchars e considerar a possibilidade de campos vazios
-    $tarefaUnica = new TarefaUnica($_POST['nome'],$_POST['descricao'],new \DateTime($_POST['dataInicial']), $_POST['peso']);
+    $nome = htmlspecialchars(isset($_POST['nome'])? $_POST['nome']: '');
+    $descricao = htmlspecialchars(isset($_POST['descricao'])? $_POST['descricao']: '');
+    $data = isset($_POST['dataInicial'])? new \DateTime($_POST['dataInicial']): null;
+    $peso = htmlspecialchars(isset($_POST['peso'])? $_POST['peso']: 0);
+
     if($_POST['horarioDefinido'] == 'especifico'){
-        $tarefaUnica->setHorario(new \DateTime($_POST['horario']));
+        $horario = isset($_POST['horario'])? new \DateTime($_POST['horario']): null;
+        $tarefaUnica = new TarefaUnica($nome, $descricao, $data, $peso, $horario);
+    }else{
+        $tarefaUnica = new TarefaUnica($nome, $descricao, $data, $peso);
     }
     $tarefaUnicaDao = new TarefaUnicaDAO();
     $tarefaUnicaDao->inserir($tarefaUnica);
