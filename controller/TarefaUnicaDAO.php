@@ -30,12 +30,28 @@ class TarefaUnicaDAO{
     }
 
     function selecionarTarefasPelaData(\DateTime $data){
-        $sql = 'SELECT * FROM tarefa_unica WHERE data = ?';
-        $data = $data->format('Y-m-d');
-        $pdo = criarPDO();
-        $ps = $pdo->prepare($sql);
-        $ps->execute([$data]);
-        return $ps->fetchAll();
+        try{
+            $sql = 'SELECT * FROM tarefa_unica WHERE data = ?';
+            $data = $data->format('Y-m-d');
+            $pdo = criarPDO();
+            $ps = $pdo->prepare($sql);
+            $ps->execute([$data]);
+            return $ps->fetchAll();
+        }catch(Exception $e){
+            echo('Não foi possível buscar as tarefas');
+        }
+    }
+
+    function selecionarTarefaPorId(int $id){
+        try{
+            $sql = 'SELECT * FROM tarefa_unica WHERE id = ?';
+            $pdo = criarPDO();
+            $ps = $pdo->prepare($sql);
+            $ps->execute([$id]);
+            return $ps->fetch();
+        }catch(Exception $e){
+            echo('Não foi possível buscar a tarefa');
+        }
     }
 
     function excluirTarefa(int $id){

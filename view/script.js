@@ -2,7 +2,7 @@ const mesesDoAno = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 
 
 const concluirTarefa = async (id, tipo) => {
     try {
-        response = await fetch(`/controller/concluirTarefa.php?id=${id}&tipo=${tipo}`, {
+        const response = await fetch(`/controller/concluirTarefa.php?id=${id}&tipo=${tipo}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -38,7 +38,17 @@ const desfazerTarefa = async (id, tipo) => {
 
 }
 
-/*const teste = document.querySelector('.teste');*/
+const abrirAtualizar = async (id, tipo) => {
+    const response = await fetch(`/controller/buscarTarefa.php?id=${id}&tipo=${tipo}`, {
+        method: "Get"
+    });
+
+    const resultado = await response.json();
+
+    document.querySelector('#nomeAtualizar').value = resultado.nome;
+
+}
+
 const atualizarTarefa = document.querySelector('.atualizar-tarefa');
 
 const exibirMes = async (mes, ano) => {
@@ -99,7 +109,6 @@ const exibirMes = async (mes, ano) => {
     } catch (error) {
         console.error('Erro:', error);
     }
-    /*console.log(resultado);*/
     calendario.innerHTML = "";
     let i = 0;
     for (let data = new Date(dataInicial.getTime()); data <= dataFinal; data.setDate(data.getDate() + 1)) {
@@ -129,118 +138,120 @@ const exibirMes = async (mes, ano) => {
         iesimoDia.appendChild(numeroDia);
 
         resultado['unica'][i].forEach(tarefa => {
-            const divTarefa = document.createElement("div");
-            divTarefa.classList.add("tarefa");
-
-            divTarefa.dataset.id = tarefa.id;
-            divTarefa.dataset.tipo = 'unica';
-
-            divTarefa.addEventListener('click', () => {
-                criarTarefa.style.display = 'none';
-                k = 200;
-            })
-
-            divTarefa.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (e.target.classList.contains('tarefa') ||
-                    (e.target.parentNode.classList.contains('tarefa') && !e.target.classList.contains('delete')
-                        && e.target.tagName != 'IMG')) {
-                    atualizarTarefa.style.display = 'block';
-                }
-            })
-
-            const img = document.createElement("img");
-            if (!tarefa.concluida) {
-                img.src = "imagens/unchecked.png";
-            } else {
-                img.src = "imagens/checked.png"
-            }
-            img.classList.add("checked");
-            divTarefa.appendChild(img);
-
-            img.addEventListener('mouseover', function () {
-                if (!img.src.includes('imagens/checked.png'))
-                    img.src = 'imagens/unchecked-hover.png';
-            })
-
-            img.addEventListener('mouseout', function () {
-                if (img.src.includes('imagens/unchecked-hover.png'))
-                    img.src = 'imagens/unchecked.png';
-            })
-
-            img.addEventListener('click', function () {
-                if (img.src.includes('imagens/unchecked-hover.png') || img.src.includes('imagens/unchecked.png')) {
-                    img.src = 'imagens/checked.png';
-                    concluirTarefa(tarefa.id, 'unica');
-                } else if (img.src.includes('imagens/checked.png')) {
-                    img.src = 'imagens/unchecked-hover.png';
-                    desfazerTarefa(tarefa.id, 'unica');
-                }
-            })
-
-            const nome = document.createElement("p");
-            nome.classList.add("nome");
-            nome.innerText = tarefa.nome;
-            divTarefa.appendChild(nome);
-
-            const times = document.createElement("span");
-            times.classList.add('delete');
-            times.innerHTML = "&times;";
-
-            divTarefa.appendChild(times);
-            iesimoDia.appendChild(divTarefa);
-
-            /*divTarefa.addEventListener('click', (e) => {
-                atualizarTarefa.style.display = 'block';
-                e.stopPropagation();
-            })*/
+            montarTarefa(iesimoDia, tarefa);
         }
         )
-        switch (i) {
-            case 0:
-                criarLegenda('dom', iesimoDia);
-                break;
-            case 1:
-                criarLegenda('seg', iesimoDia);
-                break;
-            case 2:
-                criarLegenda('ter', iesimoDia);
-                break;
-            case 3:
-                criarLegenda('qua', iesimoDia);
-                break;
-            case 4:
-                criarLegenda('qui', iesimoDia);
-                break;
-            case 5:
-                criarLegenda('sex', iesimoDia);
-                break;
-            case 6:
-                criarLegenda('sab', iesimoDia);
-                break;
-            default:
-                break;
-        }
-
-
-
+        criarLegenda(i, iesimoDia);
         i++;
+
         calendario.appendChild(iesimoDia);
     }
 }
 
-function criarLegenda(diaLegenda, iesimoDia) {
+function criarLegenda(iteracao, iesimoDia) {
     const legenda = document.createElement('p');
     legenda.classList.add("legenda");
-    legenda.innerText = diaLegenda;
+    switch (iteracao) {
+        case 0:
+            legenda.innerText = 'dom';
+            break;
+        case 1:
+            legenda.innerText = 'seg';
+            break;
+        case 2:
+            legenda.innerText = 'ter';
+            break;
+        case 3:
+            legenda.innerText = 'qua';
+            break;
+        case 4:
+            legenda.innerText = 'qui';
+            break;
+        case 5:
+            legenda.innerText = 'sex';
+            break;
+        case 6:
+            legenda.innerText = 'sab';
+            break;
+        default:
+            break;
+    }
     iesimoDia.appendChild(legenda);
 }
 
-/*document.addEventListener("click", (e) => {
-    if (!atualizarTarefa.contains(e.target) && !e.target.classList.contains('tarefa')) {
-        atualizarTarefa.style.display = "none";
+
+
+function montarTarefa(iesimoDia, tarefa) {
+    const divTarefa = document.createElement("div");
+    divTarefa.classList.add("tarefa");
+
+    divTarefa.dataset.id = tarefa.id;
+    divTarefa.dataset.tipo = 'unica';
+
+    eventoFecharForm(divTarefa, 'click');
+
+    eventoAbrirAtualizar(divTarefa);
+
+    const img = document.createElement("img");
+    if (!tarefa.concluida) {
+        img.src = "imagens/unchecked.png";
+    } else {
+        img.src = "imagens/checked.png"
     }
-});*/
+
+    img.classList.add("checked");
+    divTarefa.appendChild(img);
+
+    img.addEventListener('mouseover', function () {
+        if (!img.src.includes('imagens/checked.png'))
+            img.src = 'imagens/unchecked-hover.png';
+    })
+
+    img.addEventListener('mouseout', function () {
+        if (img.src.includes('imagens/unchecked-hover.png'))
+            img.src = 'imagens/unchecked.png';
+    })
+
+    img.addEventListener('click', function () {
+        if (img.src.includes('imagens/unchecked-hover.png') || img.src.includes('imagens/unchecked.png')) {
+            img.src = 'imagens/checked.png';
+            concluirTarefa(tarefa.id, 'unica');
+        } else if (img.src.includes('imagens/checked.png')) {
+            img.src = 'imagens/unchecked-hover.png';
+            desfazerTarefa(tarefa.id, 'unica');
+        }
+    })
+
+    const nome = document.createElement("p");
+    nome.classList.add("nome");
+    nome.innerText = tarefa.nome;
+    divTarefa.appendChild(nome);
+
+    const times = document.createElement("span");
+    times.classList.add('delete');
+    times.innerHTML = "&times;";
+
+    divTarefa.appendChild(times);
+    iesimoDia.appendChild(divTarefa);
+}
+
+function eventoFecharForm(elemento, evento) {
+    elemento.addEventListener(evento, () => {
+        criarTarefa.style.display = 'none';
+        k = 200;
+    })
+}
+
+function eventoAbrirAtualizar(divTarefa) {
+    divTarefa.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tarefa') ||
+            (e.target.parentNode.classList.contains('tarefa') && !e.target.classList.contains('delete')
+                && e.target.tagName != 'IMG')) {
+            atualizarTarefa.style.display = 'block';
+            abrirAtualizar(divTarefa.dataset.id, divTarefa.dataset.tipo);
+        }
+    })
+}
 
 const calendario = document.querySelector('.calendario');
 
@@ -563,13 +574,23 @@ document.addEventListener("DOMContentLoaded", () => {
     exibirMes(mes, ano);
 });
 
+//exibicao do form de update
+
 document.addEventListener('click', (e) => {
-    if (atualizarTarefa.style.display == 'block' && !e.target.classList.contains('atualizar-tarefa')
+    let condicao = true;
+    let iteravel = e.target;
+    while (iteravel != body) {
+        if (iteravel.classList.contains('atualizar-tarefa')) {
+            condicao = false;
+        }
+        iteravel = iteravel.parentNode;
+    }
+    if (condicao && atualizarTarefa.style.display == 'block' && !e.target.classList.contains('atualizar-tarefa')
         && !(e.target.classList.contains('tarefa') ||
             (e.target.parentNode.classList.contains('tarefa') && !e.target.classList.contains('delete')
                 && e.target.tagName != 'IMG'))) {
         atualizarTarefa.style.display = 'none';
         criarTarefa.style.display = 'none';
-        k = -1;
+        k = 0;
     }
 })

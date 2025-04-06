@@ -357,7 +357,7 @@ header button {
     display: none;
 }
 
-#nome {
+#nome, #nomeAtualizar {
     width: 95%;
 }
 

@@ -2,6 +2,7 @@
 
 namespace controller;
 require_once __DIR__ . '/../autoload.php';
+header('Content-Type: application/json');
 
 $id = isset($_GET['id'])? $_GET['id']: 0;
 $tipo = isset($_GET['tipo'])? $_GET['tipo']: "";
@@ -13,6 +14,7 @@ if($id > 0){
     }
 }else{
     echo json_encode(['Tarefa não encontrada']);
+    http_response_code(404);
 }
 
 ?>
