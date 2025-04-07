@@ -38,15 +38,35 @@ const desfazerTarefa = async (id, tipo) => {
 
 }
 
+const inputHorarioAtualizar = document.getElementById('horarioAtualizar');
+
+const requeridoAtualizar = function (tipoHorarioAtualizar) {
+    if (tipoHorarioAtualizar == 'especifico') {
+        inputHorarioAtualizar.setAttribute("required", true);
+    } else {
+        inputHorarioAtualizar.removeAttribute("required");
+    }
+}
+
 const abrirAtualizar = async (id, tipo) => {
     const response = await fetch(`/controller/buscarTarefa.php?id=${id}&tipo=${tipo}`, {
         method: "Get"
     });
 
     const resultado = await response.json();
-
-    document.querySelector('#nomeAtualizar').value = resultado.nome;
-
+    document.getElementById('nomeAtualizar').value = resultado.nome;
+    document.getElementById('descricaoAtualizar').value = resultado.descricao;    
+    document.getElementById('pesoAtualizar').value = resultado.peso;
+    //1000-12-25 00:00:00
+    if(resultado.data != '1000-12-25' && resultado.horario != '00:00:00'){
+        requerido('especificoAtualizar');
+        document.getElementById('especificoAtualizar').setAttribute('checked', true);
+        document.getElementById('horarioAtualizar').value = resultado.horario;
+    }
+    if(tipo === 'unica'){
+        document.getElementById('repeticaoAtualizar').value = 'unica';
+    }
+    document.getElementById('dataInicialAtualizar').value = resultado.data;
 }
 
 const atualizarTarefa = document.querySelector('.atualizar-tarefa');
@@ -92,7 +112,7 @@ const exibirMes = async (mes, ano) => {
     let resultado = null;
 
     try {
-        response = await fetch('/controller/carregarDias.php', {
+        const response = await fetch('/controller/carregarDias.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -103,7 +123,6 @@ const exibirMes = async (mes, ano) => {
         if (!response.ok) {
             throw new Error('Erro ao obter dados do PHP');
         }
-
         resultado = await response.json();
 
     } catch (error) {
@@ -481,6 +500,22 @@ repeticao.addEventListener('change', function () {
     //document.getElementById('diasMes').classList.toggle('hidden', tipoRepeticao !== 'mensal');
 });
 
+const repeticaoAtualizar = document.getElementById('repeticaoAtualizar');
+const dataLabelAtualizar = document.querySelector('.dataLabelAtualizar');
+
+repeticaoAtualizar.addEventListener('change', function () {
+    const tipoRepeticao = this.value;
+
+    document.getElementById('diasSemanaAtualizar').classList.toggle('hidden', tipoRepeticao === 'unica');
+    document.getElementById('diasSemanaAtualizar').classList.toggle('diasSemanaAtualizar', tipoRepeticao === 'semanal');
+    if (tipoRepeticao === 'semanal') {
+        dataLabel.innerText = 'Data Inicial: ';
+    } else if (tipoRepeticao === 'unica') {
+        dataLabel.innerText = 'Data: ';
+    }
+
+    //document.getElementById('diasMes').classList.toggle('hidden', tipoRepeticao !== 'mensal');
+});
 //definindo horário
 
 const inputsRadio = document.querySelectorAll('input[name="horarioDefinido"]');
@@ -594,3 +629,29 @@ document.addEventListener('click', (e) => {
         k = 0;
     }
 })
+
+//enviando form de criação de tarefa assincronamente
+
+const formCriar = document.getElementById('formCriar');
+
+formCriar.addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(formCriar);
+  const action = formCriar.getAttribute('action');
+
+  try {
+    const response = await fetch(action, {
+      method: 'POST',
+      body: formData
+    });
+
+    exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
+    criarTarefa.style.display = 'none';
+    k = 200;
+
+    formCriar.reset();
+  } catch (error) {
+    console.error('Erro ao enviar formulário:', error);
+  }
+});

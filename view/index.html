@@ -66,7 +66,7 @@
 
     <div class="criar-tarefa">
         <button class="close"><img src="imagens/close.png"></button>
-        <form method="POST" action="/controller/criarTarefa.php" class="formulario">
+        <form method="POST" action="/controller/criarTarefa.php" class="formulario" id="formCriar">
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" required><br><br>
 
@@ -81,7 +81,6 @@
             <input type="radio" id="especifico" name="horarioDefinido" value="especifico" onchange="requerido('especifico')">Horário específico<br>
             <label for="horario"></label>
             <input type="time" name="horario" id="horario">
-            <!--isso tem que se tornar required quando 'especifico for marcado'-->
             
 
             <label for="repeticao">Tipo de Repetição:</label>
@@ -127,27 +126,25 @@
             <input type="text" id="nomeAtualizar" name="nome" required><br><br>
 
             <label for="descricao">Descrição:</label><br>
-            <textarea id="descricao" name="descricaoAtualiar"></textarea><br><br>
+            <textarea id="descricaoAtualizar" name="descricao"></textarea><br><br>
 
             <label for="peso">Peso:</label>
-            <input type="number" id="peso" name="peso" step="0.1" required><br><br>
+            <input type="number" id="pesoAtualizar" name="peso" step="0.1" required><br><br>
 
             <!--<label>Horário:</label><br>-->
-            <input type="radio" id="qualquer" name="horarioDefinido" value="qualquer" checked onchange="requerido('qualquer')">Qualquer hora
-            <input type="radio" id="especifico" name="horarioDefinido" value="especifico" onchange="requerido('especifico')">Horário específico<br>
+            <input type="radio" id="qualquerAtualizar" name="horarioDefinido" value="qualquer" checked onchange="requeridoAtualizar('qualquer')">Qualquer hora
+            <input type="radio" id="especificoAtualizar" name="horarioDefinido" value="especifico" onchange="requeridoAtualizar('especifico')">Horário específico<br>
             <label for="horario"></label>
-            <input type="time" name="horario" id="horario">
-            <!--isso tem que se tornar required quando 'especifico for marcado'-->
-            
+            <input type="time" name="horario" id="horarioAtualizar">            
 
             <label for="repeticao">Tipo de Repetição:</label>
-            <select id="repeticao" name="repeticao">
+            <select id="repeticaoAtualizar" name="repeticao">
                 <option value="unica">Não se repete</option>
                 <option value="semanal">Semanal</option>
                 <!--<option value="mensal">Mensal</option>-->
             </select><br><br>
 
-            <div id="diasSemana" class="hidden">
+            <div id="diasSemanaAtualizar" class="hidden">
                 <input type="checkbox" id="monday" name="day" value="M">
                 <label for="monday">D</label>
                 
@@ -169,8 +166,8 @@
                 <input type="checkbox" id="sunday" name="day" value="S">
                 <label for="sunday">S</label>
             </div>
-            <label for="dataInicial" class="dataLabel">Data: </label>
-            <input type="date" name="dataInicial" id="dataInicial" required>
+            <label for="dataInicial" class="dataLabelAtualizar">Data: </label>
+            <input type="date" name="dataInicial" id="dataInicialAtualizar" required>
 
             <button type="submit" id="criar">Criar Tarefa</button>
         </form>

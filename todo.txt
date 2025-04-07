@@ -1,7 +1,17 @@
+tela de login
+
+calculo de produtividade
+
+metas
+
+feriados nacionais
+
+config de ativar/desativar feriados
+
+modo escuro
+
 Form:
     validação do formulário
-    ajustar campos requireds
-    ajustar restrições de entrada (ano entre 1000 e 9999)
-
+    ajustar restrições de entrada (ano entre 1000 e 9999, ...)
 
 Lançamentos de exceções no crud
