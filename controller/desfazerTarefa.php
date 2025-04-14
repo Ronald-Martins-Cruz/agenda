@@ -10,7 +10,8 @@ $tipo = (isset($_GET['tipo']))? $_GET['tipo']: "";
 if($id > 0){
     if($tipo == 'unica'){
         $tarefaUnicaDAO = new TarefaUnicaDAO();
-        echo(json_encode($tarefaUnicaDAO->desfazerTarefa($id)));
+        $tarefaUnicaDAO->desfazerTarefa($id);
+        echo(json_encode($tarefaUnicaDAO->selecionarTarefaPorId($id)));
     }
 }
 

@@ -9,6 +9,7 @@ if($id > 0){
     if($tipo == 'unica'){
         $tarefaUnicaDAO = new TarefaUnicaDAO();
         $tarefaUnicaDAO->concluirTarefa($id);
+        echo(json_encode($tarefaUnicaDAO->selecionarTarefaPorId($id)));
     }
 }
 

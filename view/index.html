@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <!-- index.html -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +11,16 @@
 </head>
 
 <body>
-    
+
     <header>
-        <h1><img src="imagens/agenda-icon2.png"><p>Agenda</p></h1>
+        <h1><img src="imagens/agenda-icon2.png">
+            <p>Agenda</p>
+        </h1>
         <div class="setas">
             <button class="voltar"><img src="imagens/seta.png" class="seta-tras"></button>
             <button class="ir"><img src="imagens/seta.png" class="seta-frente"></button>
         </div>
-    
+
         <button class="selecionar-mes">
             <div class="mes-do-ano">
                 <p class="mes"></p>
@@ -45,22 +48,36 @@
                 <p>Dez</p>
             </div>
         </button>
-        
+
         <!--<img src="imagens/configuracoes.png" class="configuracoes">-->
     </header>
-    
+
     <div class="container">
         <div class="calculo">
-            <!--
-            <h1>PRODUTIVIDADE</h1>
-            <div class="periodo">
-                <p>semana 15/12 21/12</p>
+            <h2>PRODUTIVIDADE</h2>
+            <form method="post" action="/controller/calcularProdutividade.php">
+                <div class="datas">
+                    <div>
+                        <label for="primeiro-dia">Início: </label><br>
+                        <input type="date" name="primeiro-dia" id="primeiro-dia" required>
+                    </div>
+                    <div>
+                        <label for="ultimo-dia">Fim: </label><br>
+                        <input type="date" name="ultimo-dia" id="ultimo-dia" required>
+                    </div>
+                </div>
+                <!--<select name="tipoDeTarefa" id="tipoDeTarefa">
+                <option value="todas">Todas as tarefas</option>
+            </select>-->
+                <button type="submit">Calcular</button>
+            </form>
+            <div class="porcentagem">
+                <p>75%</p>
             </div>
-            -->
         </div>
 
         <div class="calendario">
-            
+
         </div>
     </div>
 
@@ -77,11 +94,13 @@
             <input type="number" id="peso" name="peso" step="0.1" required><br><br>
 
             <!--<label>Horário:</label><br>-->
-            <input type="radio" id="qualquer" name="horarioDefinido" value="qualquer" checked onchange="requerido('qualquer')">Qualquer hora
-            <input type="radio" id="especifico" name="horarioDefinido" value="especifico" onchange="requerido('especifico')">Horário específico<br>
+            <input type="radio" id="qualquer" name="horarioDefinido" value="qualquer" checked
+                onchange="requerido('qualquer')">Qualquer hora
+            <input type="radio" id="especifico" name="horarioDefinido" value="especifico"
+                onchange="requerido('especifico')">Horário específico<br>
             <label for="horario"></label>
             <input type="time" name="horario" id="horario">
-            
+
 
             <label for="repeticao">Tipo de Repetição:</label>
             <select id="repeticao" name="repeticao">
@@ -93,22 +112,22 @@
             <div id="diasSemana" class="hidden">
                 <input type="checkbox" id="monday" name="day" value="M">
                 <label for="monday">D</label>
-                
+
                 <input type="checkbox" id="tuesday" name="day" value="T">
                 <label for="tuesday">S</label>
-                
+
                 <input type="checkbox" id="wednesday" name="day" value="W">
                 <label for="wednesday">T</label>
-                
+
                 <input type="checkbox" id="thursday" name="day" value="T">
                 <label for="thursday">Q</label>
-                
+
                 <input type="checkbox" id="friday" name="day" value="F">
                 <label for="friday">Q</label>
-                
+
                 <input type="checkbox" id="saturday" name="day" value="S">
                 <label for="saturday">S</label>
-                
+
                 <input type="checkbox" id="sunday" name="day" value="S">
                 <label for="sunday">S</label>
             </div>
@@ -121,7 +140,7 @@
 
     <div class="atualizar-tarefa">
         <button class="close"><img src="imagens/close.png"></button>
-        <form method="POST" action="/controller/atualizarTarefa.php" class="formulario">
+        <form method="POST" action="/controller/atualizarTarefa.php" class="formulario" id="formAtualizar">
             <label for="nome">Nome:</label>
             <input type="text" id="nomeAtualizar" name="nome" required><br><br>
 
@@ -132,44 +151,50 @@
             <input type="number" id="pesoAtualizar" name="peso" step="0.1" required><br><br>
 
             <!--<label>Horário:</label><br>-->
-            <input type="radio" id="qualquerAtualizar" name="horarioDefinido" value="qualquer" checked onchange="requeridoAtualizar('qualquer')">Qualquer hora
-            <input type="radio" id="especificoAtualizar" name="horarioDefinido" value="especifico" onchange="requeridoAtualizar('especifico')">Horário específico<br>
+            <input type="radio" id="qualquerAtualizar" name="horarioDefinido" value="qualquer" checked
+                onchange="requeridoAtualizar('qualquer')">Qualquer hora
+            <input type="radio" id="especificoAtualizar" name="horarioDefinido" value="especifico"
+                onchange="requeridoAtualizar('especifico')">Horário específico<br>
             <label for="horario"></label>
-            <input type="time" name="horario" id="horarioAtualizar">            
+            <input type="time" name="horario" id="horarioAtualizar"><br><br />
 
             <label for="repeticao">Tipo de Repetição:</label>
-            <select id="repeticaoAtualizar" name="repeticao">
+            <select id="repeticaoAtualizar" name="repeticao"
+                title="Não é possível alterar o tipo de repetição de uma tarefa">
                 <option value="unica">Não se repete</option>
                 <option value="semanal">Semanal</option>
                 <!--<option value="mensal">Mensal</option>-->
             </select><br><br>
+            <input type="hidden" name="tipoDeRepeticao" id="tipoDeRepeticao">
 
             <div id="diasSemanaAtualizar" class="hidden">
                 <input type="checkbox" id="monday" name="day" value="M">
                 <label for="monday">D</label>
-                
+
                 <input type="checkbox" id="tuesday" name="day" value="T">
                 <label for="tuesday">S</label>
-                
+
                 <input type="checkbox" id="wednesday" name="day" value="W">
                 <label for="wednesday">T</label>
-                
+
                 <input type="checkbox" id="thursday" name="day" value="T">
                 <label for="thursday">Q</label>
-                
+
                 <input type="checkbox" id="friday" name="day" value="F">
                 <label for="friday">Q</label>
-                
+
                 <input type="checkbox" id="saturday" name="day" value="S">
                 <label for="saturday">S</label>
-                
+
                 <input type="checkbox" id="sunday" name="day" value="S">
                 <label for="sunday">S</label>
             </div>
             <label for="dataInicial" class="dataLabelAtualizar">Data: </label>
             <input type="date" name="dataInicial" id="dataInicialAtualizar" required>
 
-            <button type="submit" id="criar">Criar Tarefa</button>
+            <input type="hidden" name="idTarefa" id="idTarefa" value="-1">
+
+            <button type="submit" id="atualizar">Atualizar Tarefa</button>
         </form>
     </div>
 
@@ -177,4 +202,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -6,6 +6,7 @@
     --peso3: #2E00FF;
     --peso4: #FF7000;
     --peso5: #ff0000;
+    --background-color-feriado: rgb(209, 134, 43);
     --background-color-criar-tarefa: #D0D4DB;
 }
 
@@ -256,6 +257,13 @@ header button {
     border-bottom-right-radius: 20px;
 }
 
+.scrolavel{
+    max-height: 90%;
+    width: 95%;
+    overflow: auto;
+    margin-top: 20px;
+}
+
 .tarefa{
     width: 95%;
     height: 20px;
@@ -368,7 +376,8 @@ header button {
     width: 95%;
 }
 
-#criar {
+#criar,
+#atualizar {
     background: #007bff;
     color: white;
     border: none;
@@ -559,5 +568,74 @@ input[type="radio"] {
     color: white;
     background-color: black;
     text-align: center;
+    display: none;
+}
+
+.calculo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calculo form{
+    display: flex;
+    flex-direction: column;
+}
+
+.calculo > h2 {
+    margin-top: 100px;
+    margin-bottom: 20px;
+}
+
+.rotulos{
+    display: flex;
+    justify-content: space-between;
+}
+
+.datas{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.datas div:nth-child(1){
+    margin-right: 10px;
+}
+
+.porcentagem{
+    padding: 70px;
+    border: 1px solid black;
+    border-radius: 15%;
+    background: linear-gradient(45deg, blueviolet, red);
+}
+
+.porcentagem p{
+    color: white;
+    font-size: 3rem;
+    margin: 0;
+}
+
+.calculo button{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    /*border-radius: 5%;*/
+}
+
+.calculo button:hover{
+    cursor: pointer;
+}
+
+.feriado{
+    background-color: rgb(209, 134, 43);
+}
+
+
+
+
+
+/*   PARA SER ATUALIZADO     */
+
+.calculo form{
     display: none;
 }

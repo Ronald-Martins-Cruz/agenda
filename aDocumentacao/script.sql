@@ -8,7 +8,8 @@ CREATE TABLE tarefa_unica(
     descricao text,
     data date NOT NULL,
     peso decimal NOT NULL,
-    horario time
+    horario time,
+    concluida boolean
 )ENGINE=INNODB;
 
 CREATE TABLE tarefa_semanal(

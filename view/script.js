@@ -1,5 +1,8 @@
 const mesesDoAno = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
+let qtdTarefasConcluidas = 0;
+let qtdTarefas = 0;
+
 const concluirTarefa = async (id, tipo) => {
     try {
         const response = await fetch(`/controller/concluirTarefa.php?id=${id}&tipo=${tipo}`, {
@@ -13,10 +16,17 @@ const concluirTarefa = async (id, tipo) => {
             throw new Error('Erro ao obter dados do PHP');
         }
 
+        const tarefa = await response.json();
+        const dataInicial = document.getElementById('primeiro-dia').value;
+        const dataFinal = document.getElementById('ultimo-dia');
+        if(tarefa.data >= dataInicial && tarefa.data <= dataFinal){
+            qtdTarefasConcluidas++;
+            exibirProdutividade(qtdTarefasConcluidas, qtdTarefas);
+        }
+
     } catch (error) {
         console.error('Erro:', error);
-    }
-
+    }    
 }
 
 const desfazerTarefa = async (id, tipo) => {
@@ -36,9 +46,18 @@ const desfazerTarefa = async (id, tipo) => {
         console.error('Erro:', error);
     }
 
+    const tarefa = await response.json();
+    const dataInicial = document.getElementById('primeiro-dia').value;
+    const dataFinal = document.getElementById('ultimo-dia');
+    if(tarefa.data >= dataInicial && tarefa.data <= dataFinal){
+        qtdTarefasConcluidas--;
+        exibirProdutividade(qtdTarefasConcluidas, qtdTarefas);
+    }
+
 }
 
 const inputHorarioAtualizar = document.getElementById('horarioAtualizar');
+
 
 const requeridoAtualizar = function (tipoHorarioAtualizar) {
     if (tipoHorarioAtualizar == 'especifico') {
@@ -55,18 +74,26 @@ const abrirAtualizar = async (id, tipo) => {
 
     const resultado = await response.json();
     document.getElementById('nomeAtualizar').value = resultado.nome;
-    document.getElementById('descricaoAtualizar').value = resultado.descricao;    
+    document.getElementById('descricaoAtualizar').value = resultado.descricao;
     document.getElementById('pesoAtualizar').value = resultado.peso;
     //1000-12-25 00:00:00
-    if(resultado.data != '1000-12-25' && resultado.horario != '00:00:00'){
+    if (resultado.horario != null) {
         requerido('especificoAtualizar');
-        document.getElementById('especificoAtualizar').setAttribute('checked', true);
+        document.getElementById('qualquerAtualizar').checked = false;
+        document.getElementById('especificoAtualizar').checked = true;
         document.getElementById('horarioAtualizar').value = resultado.horario;
+    } else {
+        document.getElementById('especificoAtualizar').checked = false;
+        document.getElementById('qualquerAtualizar').checked = true;
+
     }
-    if(tipo === 'unica'){
+    if (tipo === 'unica') {
         document.getElementById('repeticaoAtualizar').value = 'unica';
+        document.getElementById('repeticaoAtualizar').disabled = true;
+        document.getElementById('tipoDeRepeticao').value = 'unica';
     }
     document.getElementById('dataInicialAtualizar').value = resultado.data;
+    document.getElementById('idTarefa').value = id;
 }
 
 const atualizarTarefa = document.querySelector('.atualizar-tarefa');
@@ -130,12 +157,19 @@ const exibirMes = async (mes, ano) => {
     }
     calendario.innerHTML = "";
     let i = 0;
+    qtdTarefasConcluidas = 0;
+    qtdTarefas = 0;
     for (let data = new Date(dataInicial.getTime()); data <= dataFinal; data.setDate(data.getDate() + 1)) {
         const anoData = data.getFullYear();
         const mesData = String(data.getMonth() + 1).padStart(2, '0');
         const diaData = String(data.getDate()).padStart(2, '0');
         const iesimoDia = document.createElement("div");
         iesimoDia.classList.add('dia');
+        const scrolavel = document.createElement("nav");
+        scrolavel.classList.add("scrolavel");
+        iesimoDia.appendChild(scrolavel);
+
+
 
         iesimoDia.dataset.dia = `${anoData}-${mesData}-${diaData}`;
 
@@ -157,7 +191,10 @@ const exibirMes = async (mes, ano) => {
         iesimoDia.appendChild(numeroDia);
 
         resultado['unica'][i].forEach(tarefa => {
-            montarTarefa(iesimoDia, tarefa);
+            qtdTarefas++;
+            if (tarefa.concluida)
+                qtdTarefasConcluidas++;
+            montarTarefa(scrolavel, tarefa);
         }
         )
         criarLegenda(i, iesimoDia);
@@ -165,6 +202,7 @@ const exibirMes = async (mes, ano) => {
 
         calendario.appendChild(iesimoDia);
     }
+    exibirProdutividade(qtdTarefasConcluidas, qtdTarefas);
 }
 
 function criarLegenda(iteracao, iesimoDia) {
@@ -270,6 +308,20 @@ function eventoAbrirAtualizar(divTarefa) {
             abrirAtualizar(divTarefa.dataset.id, divTarefa.dataset.tipo);
         }
     })
+}
+
+function exibirProdutividade(numerador, denominador) {
+    document.getElementById('primeiro-dia').value = anoNoButton.innerText + "-"
+        + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0')
+        + "-01";
+    document.getElementById('ultimo-dia').value = anoNoButton.innerText + "-"
+        + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0') + "-"
+        + diasDoMes(String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0'), anoNoButton.innerText);
+    if(denominador >= 1){
+        document.querySelector('.porcentagem p').innerText = Math.round(100 * numerador / denominador) + "%";
+    }else{
+        document.querySelector('.porcentagem p').innerText = "0%";
+    }
 }
 
 const calendario = document.querySelector('.calendario');
@@ -635,23 +687,45 @@ document.addEventListener('click', (e) => {
 const formCriar = document.getElementById('formCriar');
 
 formCriar.addEventListener('submit', async function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const formData = new FormData(formCriar);
-  const action = formCriar.getAttribute('action');
+    const formData = new FormData(formCriar);
+    const action = formCriar.getAttribute('action');
 
-  try {
-    const response = await fetch(action, {
-      method: 'POST',
-      body: formData
-    });
+    try {
+        const response = await fetch(action, {
+            method: 'POST',
+            body: formData
+        });
 
-    exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
-    criarTarefa.style.display = 'none';
-    k = 200;
+        exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
+        criarTarefa.style.display = 'none';
+        k = 200;
 
-    formCriar.reset();
-  } catch (error) {
-    console.error('Erro ao enviar formulário:', error);
-  }
+        formCriar.reset();
+    } catch (error) {
+        console.error('Erro ao enviar formulário.');
+    }
 });
+
+const formAtualizar = document.getElementById('formAtualizar');
+
+formAtualizar.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+
+    const formData = new FormData(formAtualizar);
+    const action = formAtualizar.getAttribute('action');
+    let response = null;
+
+    try {
+        response = await fetch(action, {
+            method: 'POST',
+            body: formData
+        })
+    } catch (error) {
+        console.error('Erro ao enviar formulário.');
+    }
+    document.body.click();
+    exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
+})
