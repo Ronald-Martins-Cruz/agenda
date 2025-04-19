@@ -3,6 +3,35 @@ const mesesDoAno = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 
 let somaPesoConcluidas = 0;
 let somaPeso = 0;
 
+const formProdutividade = document.getElementById('calcular-produtividade');
+const erroTexto = document.querySelector('.erro-produtividade');
+
+formProdutividade.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const formData = new FormData(formProdutividade);
+    const dataInicial = document.getElementById('primeiro-dia').value;
+    const dataFinal = document.getElementById('ultimo-dia').value;
+    const url = `${formProdutividade.getAttribute('action')}?dataInicial=${dataInicial}&dataFinal=${dataFinal}`;
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+        })
+        if (response.ok) {
+            const resultado = await response.json();
+            exibirProdutividade(Number(resultado.somaPesoConcluidas),Number(resultado.somaPeso));
+            erroTexto.innerText = "";
+            erroTexto.style.display = 'none';
+        }else if(response.status == 400){
+            const resultado = await response.text();
+            erroTexto.innerText = resultado;
+            erroTexto.style.display = 'block';
+        }else if(response.status == 404){
+            const resultado = await response.text();
+            exibirProdutividade(0,0);
+        }
+    } catch(error) {
+    }
+})
 
 const concluirTarefa = async (id, tipo) => {
     try {
@@ -203,7 +232,7 @@ const exibirMes = async (mes, ano) => {
 
         calendario.appendChild(iesimoDia);
     }
-    exibirProdutividade(somaPesoConcluidas, somaPeso);
+    exibirProdutividade(somaPesoConcluidas, somaPeso, true);
 }
 
 function criarLegenda(iteracao, iesimoDia) {
@@ -311,17 +340,22 @@ function eventoAbrirAtualizar(divTarefa) {
     })
 }
 
-function exibirProdutividade(numerador, denominador) {
-    document.getElementById('primeiro-dia').value = anoNoButton.innerText + "-"
-        + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0')
-        + "-01";
-    document.getElementById('ultimo-dia').value = anoNoButton.innerText + "-"
-        + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0') + "-"
-        + diasDoMes(String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0'), anoNoButton.innerText);
-    if (denominador >= 1) {
-        document.querySelector('.porcentagem p').innerText = Math.round(100 * numerador / denominador) + "%";
-    } else {
+function exibirProdutividade(numerador, denominador, mesCompleto) {
+    if(mesCompleto){
+        document.getElementById('primeiro-dia').value = anoNoButton.innerText + "-"
+            + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0')
+            + "-01";
+        document.getElementById('ultimo-dia').value = anoNoButton.innerText + "-"
+            + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0') + "-"
+            + diasDoMes(String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0'), anoNoButton.innerText);
+    }
+    if(denominador == 0){
+        erroTexto.innerText = "Não há nenhuma tarefa no período selecionado";
+        erroTexto.style.display = 'block';
         document.querySelector('.porcentagem p').innerText = "0%";
+    }else if (denominador >= 1) {
+        erroTexto.style.display = 'none';
+        document.querySelector('.porcentagem p').innerText = Math.round(100 * numerador / denominador) + "%";
     }
 }
 
@@ -717,16 +751,16 @@ formAtualizar.addEventListener('submit', async function (e) {
 
     const formData = new FormData(formAtualizar);
     const action = formAtualizar.getAttribute('action');
-    let response = null;
 
     try {
-        response = await fetch(action, {
+        const response = await fetch(action, {
             method: 'POST',
             body: formData
         })
+        document.body.click();
+        exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
     } catch (error) {
         console.error('Erro ao enviar formulário.');
     }
-    document.body.click();
-    exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
+
 })

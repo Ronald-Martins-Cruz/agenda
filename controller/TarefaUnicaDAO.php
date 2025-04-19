@@ -88,43 +88,32 @@ class TarefaUnicaDAO{
     }
 
     function atualizarTarefa(int $id, TarefaUnica $tarefaUnica){
-        $pdo = criarPDO();
-        if($tarefaUnica->getHorario()->format('Y-m-d H:i:s') == '1000-12-25 00:00:00'){
-            $sql = 'UPDATE tarefa_unica SET nome = ?, descricao = ?, data = ?, peso = ? WHERE id = ?';
-            $ps = $pdo->prepare($sql);
-            $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-            $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$id]);
-
-        }else{
-            $sql = 'UPDATE tarefa_unica SET nome = ?, descricao = ?, data = ?, peso = ?, horario = ? WHERE id = ?';
-            $ps = $pdo->prepare($sql);
-            $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-            $horario = $tarefaUnica->getHorario()->format('H:i:s');
-            $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario,$id]);
-        }
-    }
-            /*            $pdo = criarPDO();
+        try{
+            $pdo = criarPDO();
             if($tarefaUnica->getHorario()->format('Y-m-d H:i:s') == '1000-12-25 00:00:00'){
-                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
+                $sql = 'UPDATE tarefa_unica SET nome = ?, descricao = ?, data = ?, peso = ? WHERE id = ?';
                 $ps = $pdo->prepare($sql);
                 $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
+                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$id]);
 
             }else{
-                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario) VALUES (?,?,?,?,?)';
+                $sql = 'UPDATE tarefa_unica SET nome = ?, descricao = ?, data = ?, peso = ?, horario = ? WHERE id = ?';
                 $ps = $pdo->prepare($sql);
                 $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
                 $horario = $tarefaUnica->getHorario()->format('H:i:s');
-                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario]);
-            }*/
+                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario,$id]);
+            }
+        }catch(Exception $e){
+            echo('Não foi possível atualizar a tarefa');
+        }
+    }
 
-    /*
     function selecionarTarefasPorPeriodo(string $dataInicial, string $dataFinal){
         $sql = 'SELECT * FROM tarefa_unica WHERE data BETWEEN ? AND ?';
         $pdo = criarPDO();
         $ps = $pdo->prepare($sql);
         $ps->execute([$dataInicial, $dataFinal]);
         return $ps->fetchAll();
-    }*/
+    }
 }
 ?>

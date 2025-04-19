@@ -55,7 +55,7 @@
     <div class="container">
         <div class="calculo">
             <h2>PRODUTIVIDADE</h2>
-            <form method="post" action="/controller/calcularProdutividade.php">
+            <form method="get" action="/controller/calcularProdutividade.php" id="calcular-produtividade">
                 <div class="datas">
                     <div>
                         <label for="primeiro-dia">Início: </label><br>
@@ -70,9 +70,10 @@
                 <option value="todas">Todas as tarefas</option>
             </select>-->
                 <button type="submit">Calcular</button>
+                <p class="erro-produtividade"></p>
             </form>
             <div class="porcentagem">
-                <p>75%</p>
+                <p></p>
             </div>
         </div>
 
@@ -197,8 +198,6 @@
             <button type="submit" id="atualizar">Atualizar Tarefa</button>
         </form>
     </div>
-
-    <div class="teste">TESTANDO</div>
 
     <script src="script.js"></script>
 </body>

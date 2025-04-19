@@ -558,18 +558,7 @@ input[type="radio"] {
     width: 15px;
 }
 
-.teste{
-    z-index: 1;
-    position: absolute;
-    right: 50%;
-    top: 50%;
-    width: 300px;
-    height: 300px;
-    color: white;
-    background-color: black;
-    text-align: center;
-    display: none;
-}
+/*               ESTILIZANDO DIV CALCULO                    */
 
 .calculo{
     display: flex;
@@ -580,6 +569,8 @@ input[type="radio"] {
 .calculo form{
     display: flex;
     flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
 }
 
 .calculo > h2 {
@@ -602,40 +593,52 @@ input[type="radio"] {
     margin-right: 10px;
 }
 
-.porcentagem{
+.porcentagem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 70px;
     border: 1px solid black;
     border-radius: 15%;
     background: linear-gradient(45deg, blueviolet, red);
+    text-align: center;
 }
 
-.porcentagem p{
+.porcentagem p {
     color: white;
     font-size: 3rem;
     margin: 0;
 }
-
-.calculo button{
+.calculo button {
     margin-top: 15px;
     margin-bottom: 15px;
-    padding: 5px 10px;
-    /*border-radius: 5%;*/
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, blueviolet, red);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
 }
 
-.calculo button:hover{
+.calculo button:hover {
     cursor: pointer;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .feriado{
     background-color: rgb(209, 134, 43);
 }
 
-
-
-
-
-/*   PARA SER ATUALIZADO     */
-
-.calculo form{
+.erro-produtividade{
+    width: 80%;
+    font-size: 0.8rem;
+    color: red;
+    margin-bottom: 15px;
+    text-align: center;
     display: none;
 }
+

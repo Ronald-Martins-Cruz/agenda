@@ -1,7 +1,5 @@
 tela de login
 
-calculo de produtividade
-
 metas
 
 feriados nacionais
@@ -14,4 +12,15 @@ Form:
     validação do formulário
     ajustar restrições de entrada (ano entre 1000 e 9999, ...)
 
+Response code das requisições
+
 Lançamentos de exceções no crud
+
+tarefas semanais com:
+    criar
+    excluir
+    exibirmes
+    atualizar
+    calculo de produtividade
+
+separação de arquivos js
