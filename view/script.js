@@ -1,7 +1,8 @@
 const mesesDoAno = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
-let qtdTarefasConcluidas = 0;
-let qtdTarefas = 0;
+let somaPesoConcluidas = 0;
+let somaPeso = 0;
+
 
 const concluirTarefa = async (id, tipo) => {
     try {
@@ -19,14 +20,14 @@ const concluirTarefa = async (id, tipo) => {
         const tarefa = await response.json();
         const dataInicial = document.getElementById('primeiro-dia').value;
         const dataFinal = document.getElementById('ultimo-dia');
-        if(tarefa.data >= dataInicial && tarefa.data <= dataFinal){
-            qtdTarefasConcluidas++;
-            exibirProdutividade(qtdTarefasConcluidas, qtdTarefas);
+        if (tarefa.data >= dataInicial && tarefa.data <= dataFinal) {
+            somaPesoConcluidas += Number(tarefa.peso);
+            exibirProdutividade(somaPesoConcluidas, somaPeso);
         }
 
     } catch (error) {
         console.error('Erro:', error);
-    }    
+    }
 }
 
 const desfazerTarefa = async (id, tipo) => {
@@ -49,9 +50,9 @@ const desfazerTarefa = async (id, tipo) => {
     const tarefa = await response.json();
     const dataInicial = document.getElementById('primeiro-dia').value;
     const dataFinal = document.getElementById('ultimo-dia');
-    if(tarefa.data >= dataInicial && tarefa.data <= dataFinal){
-        qtdTarefasConcluidas--;
-        exibirProdutividade(qtdTarefasConcluidas, qtdTarefas);
+    if (tarefa.data >= dataInicial && tarefa.data <= dataFinal) {
+        somaPesoConcluidas -= Number(tarefa.peso);
+        exibirProdutividade(somaPesoConcluidas, somaPeso);
     }
 
 }
@@ -157,8 +158,8 @@ const exibirMes = async (mes, ano) => {
     }
     calendario.innerHTML = "";
     let i = 0;
-    qtdTarefasConcluidas = 0;
-    qtdTarefas = 0;
+    somaPesoConcluidas = 0;
+    somaPeso = 0;
     for (let data = new Date(dataInicial.getTime()); data <= dataFinal; data.setDate(data.getDate() + 1)) {
         const anoData = data.getFullYear();
         const mesData = String(data.getMonth() + 1).padStart(2, '0');
@@ -191,9 +192,9 @@ const exibirMes = async (mes, ano) => {
         iesimoDia.appendChild(numeroDia);
 
         resultado['unica'][i].forEach(tarefa => {
-            qtdTarefas++;
+            somaPeso += Number(tarefa.peso);
             if (tarefa.concluida)
-                qtdTarefasConcluidas++;
+                somaPesoConcluidas += Number(tarefa.peso);
             montarTarefa(scrolavel, tarefa);
         }
         )
@@ -202,7 +203,7 @@ const exibirMes = async (mes, ano) => {
 
         calendario.appendChild(iesimoDia);
     }
-    exibirProdutividade(qtdTarefasConcluidas, qtdTarefas);
+    exibirProdutividade(somaPesoConcluidas, somaPeso);
 }
 
 function criarLegenda(iteracao, iesimoDia) {
@@ -317,9 +318,9 @@ function exibirProdutividade(numerador, denominador) {
     document.getElementById('ultimo-dia').value = anoNoButton.innerText + "-"
         + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0') + "-"
         + diasDoMes(String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0'), anoNoButton.innerText);
-    if(denominador >= 1){
+    if (denominador >= 1) {
         document.querySelector('.porcentagem p').innerText = Math.round(100 * numerador / denominador) + "%";
-    }else{
+    } else {
         document.querySelector('.porcentagem p').innerText = "0%";
     }
 }
