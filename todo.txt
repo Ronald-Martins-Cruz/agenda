@@ -26,3 +26,5 @@ tarefas semanais com:
 separação de arquivos js
 
 ordenação das tarefas por horário
+
+corrigir bug de exibição do input de horário no form de atualização e testar se está ficando como required quando é marcado a opção com value especifico

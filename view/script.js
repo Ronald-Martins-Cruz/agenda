@@ -87,6 +87,8 @@ const desfazerTarefa = async (id, tipo) => {
 
 const inputHorarioAtualizar = document.getElementById('horarioAtualizar');
 
+document.getElementById('qualquerAtualizar').addEventListener('change', () => {requeridoAtualizar('qualquer')});
+document.getElementById('especificoAtualizar').addEventListener('change', () => {requeridoAtualizar('especifico')});
 
 const requeridoAtualizar = function (tipoHorarioAtualizar) {
     if (tipoHorarioAtualizar == 'especifico') {
@@ -618,6 +620,9 @@ inputsRadio.forEach((radio) => {
 });
 
 const inputHorario = document.querySelector('#horario');
+
+document.getElementById('qualquer').addEventListener('change', () => requerido('qualquer'));
+document.getElementById('especifico').addEventListener('change', () => requerido('especifico'));
 
 const requerido = function (tipoHorario) {
     if (tipoHorario == 'especifico') {

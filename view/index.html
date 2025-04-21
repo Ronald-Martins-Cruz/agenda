@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<!-- index.html -->
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +7,7 @@
     <title>Agenda</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imagens/agenda-icon2-ico.ico" type="image/x-icon">
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -95,11 +95,10 @@
             <input type="number" id="peso" name="peso" step="0.1" required><br><br>
 
             <!--<label>Horário:</label><br>-->
-            <input type="radio" id="qualquer" name="horarioDefinido" value="qualquer" checked
-                onchange="requerido('qualquer')">Qualquer hora
-            <input type="radio" id="especifico" name="horarioDefinido" value="especifico"
-                onchange="requerido('especifico')">Horário específico<br>
+            <input type="radio" id="qualquer" name="horarioDefinido" value="qualquer" checked>Qualquer hora
+            <input type="radio" id="especifico" name="horarioDefinido" value="especifico">Horário específico<br>
             <label for="horario"></label>
+
             <input type="time" name="horario" id="horario">
 
 
@@ -152,10 +151,9 @@
             <input type="number" id="pesoAtualizar" name="peso" step="0.1" required><br><br>
 
             <!--<label>Horário:</label><br>-->
-            <input type="radio" id="qualquerAtualizar" name="horarioDefinido" value="qualquer" checked
-                onchange="requeridoAtualizar('qualquer')">Qualquer hora
-            <input type="radio" id="especificoAtualizar" name="horarioDefinido" value="especifico"
-                onchange="requeridoAtualizar('especifico')">Horário específico<br>
+            <input type="radio" id="qualquerAtualizar" name="horarioDefinido" value="qualquer">Qualquer hora
+            <input type="radio" id="especificoAtualizar" name="horarioDefinido" value="especifico">Horário
+            específico<br>
             <label for="horario"></label>
             <input type="time" name="horario" id="horarioAtualizar"><br><br />
 
@@ -198,8 +196,6 @@
             <button type="submit" id="atualizar">Atualizar Tarefa</button>
         </form>
     </div>
-
-    <script src="script.js"></script>
 </body>
 
 </html>
