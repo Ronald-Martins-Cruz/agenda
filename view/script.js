@@ -92,8 +92,10 @@ document.getElementById('especificoAtualizar').addEventListener('change', () => 
 
 const requeridoAtualizar = function (tipoHorarioAtualizar) {
     if (tipoHorarioAtualizar == 'especifico') {
+        inputHorarioAtualizar.style.display = 'block';
         inputHorarioAtualizar.setAttribute("required", true);
     } else {
+        inputHorarioAtualizar.style.display = 'none';
         inputHorarioAtualizar.removeAttribute("required");
     }
 }
@@ -107,16 +109,16 @@ const abrirAtualizar = async (id, tipo) => {
     document.getElementById('nomeAtualizar').value = resultado.nome;
     document.getElementById('descricaoAtualizar').value = resultado.descricao;
     document.getElementById('pesoAtualizar').value = resultado.peso;
-    //1000-12-25 00:00:00
+
     if (resultado.horario != null) {
-        requerido('especificoAtualizar');
+        requeridoAtualizar('especifico');
         document.getElementById('qualquerAtualizar').checked = false;
         document.getElementById('especificoAtualizar').checked = true;
         document.getElementById('horarioAtualizar').value = resultado.horario;
     } else {
+        requeridoAtualizar('qualquer');
         document.getElementById('especificoAtualizar').checked = false;
         document.getElementById('qualquerAtualizar').checked = true;
-
     }
     if (tipo === 'unica') {
         document.getElementById('repeticaoAtualizar').value = 'unica';
@@ -206,6 +208,8 @@ const exibirMes = async (mes, ano) => {
 
         iesimoDia.addEventListener('click', () => {
             criarTarefa.style.display = 'block';
+            formCriar.reset();
+            inputHorario.style.display = 'none';
             const dataForm = document.querySelector('#dataInicial');
             dataForm.value = iesimoDia.dataset.dia;
         })
@@ -672,12 +676,15 @@ body.addEventListener('click', function (e) {
     }
 })
 
+const formAtualizar = document.getElementById('formAtualizar');
+
 const closeBtns = document.querySelectorAll('.close');
 
 closeBtns.forEach(closeBtn => {
     closeBtn.addEventListener('click', () => {
         criarTarefa.style.display = 'none';
         atualizarTarefa.style.display = 'none';
+        formAtualizar.reset();
         k = -1;
     })
 })
@@ -716,6 +723,7 @@ document.addEventListener('click', (e) => {
             (e.target.parentNode.classList.contains('tarefa') && !e.target.classList.contains('delete')
                 && e.target.tagName != 'IMG'))) {
         atualizarTarefa.style.display = 'none';
+        formAtualizar.reset();
         criarTarefa.style.display = 'none';
         k = 0;
     }
@@ -747,12 +755,8 @@ formCriar.addEventListener('submit', async function (e) {
     }
 });
 
-const formAtualizar = document.getElementById('formAtualizar');
-
 formAtualizar.addEventListener('submit', async function (e) {
     e.preventDefault();
-
-
     const formData = new FormData(formAtualizar);
     const action = formAtualizar.getAttribute('action');
 
@@ -763,8 +767,8 @@ formAtualizar.addEventListener('submit', async function (e) {
         })
         document.body.click();
         exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
+        formAtualizar.reset();
     } catch (error) {
         console.error('Erro ao enviar formulário.');
     }
-
 })

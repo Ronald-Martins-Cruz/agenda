@@ -415,15 +415,9 @@ input[type="radio"] {
     margin-bottom: 15px;
 }
 
-#horario{
+#horario,
+#horarioAtualizar {
     margin-bottom: 15px;
-}
-  
-
-  
-
-.campo-area{
-    resize: none;
 }
 
 .botao-enviar {
@@ -440,7 +434,6 @@ input[type="radio"] {
 .botao-enviar:hover {
     background-color: #0056b3;
 }
-
 
 .diasSemana,
 .diasSemanaAtualizar {
@@ -494,11 +487,6 @@ input[type="radio"] {
     padding: 5px;
     background-color: #fff;
     color: #333;
-}
-
-.radios {
-    display: flex;
-    gap: 15px;
 }
 
 .radio-label {

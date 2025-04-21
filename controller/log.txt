@@ -1,0 +1,11 @@
+Array
+(
+    [nome] => com horário 
+    [descricao] => cdasfeas
+    [peso] => 2.00
+    [horarioDefinido] => especifico
+    [horario] => 14:07
+    [tipoDeRepeticao] => unica
+    [dataInicial] => 2025-04-23
+    [idTarefa] => 63
+)
