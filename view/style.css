@@ -602,6 +602,7 @@ input[type="radio"] {
     border-radius: 15%;
     background: linear-gradient(45deg, blueviolet, red);
     text-align: center;
+    border: none;
 }
 
 .porcentagem p {

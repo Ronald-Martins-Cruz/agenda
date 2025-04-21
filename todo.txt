@@ -24,3 +24,5 @@ tarefas semanais com:
     calculo de produtividade
 
 separação de arquivos js
+
+ordenação das tarefas por horário

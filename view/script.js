@@ -26,7 +26,6 @@ formProdutividade.addEventListener('submit', async function (e) {
             erroTexto.innerText = resultado;
             erroTexto.style.display = 'block';
         }else if(response.status == 404){
-            const resultado = await response.text();
             exibirProdutividade(0,0);
         }
     } catch(error) {
@@ -393,7 +392,7 @@ selecionarMes.addEventListener('click', (event) => {
     const tagName = clickedElement.tagName;
     const seta = clickedElement.classList;
 
-    if (tagName === 'P' || tagName == 'BUTTON' || seta == 'seta') {
+    if (tagName === 'P' || tagName == 'BUTTON' || seta == 'seta' || clickedElement.classList.contains('mes-do-ano')) {
         meses.classList.toggle('inativo');
         meses.classList.toggle('meses');
     }

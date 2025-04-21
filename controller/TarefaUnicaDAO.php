@@ -25,6 +25,7 @@ class TarefaUnicaDAO{
                 $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario]);
             }
         }catch(Exception $e){
+            http_response_code(500);
             echo('Não foi possível inserir a tarefa');
         }
     }
@@ -38,6 +39,7 @@ class TarefaUnicaDAO{
             $ps->execute([$data]);
             return $ps->fetchAll();
         }catch(Exception $e){
+            http_response_code(500);
             echo('Não foi possível buscar as tarefas');
         }
     }
@@ -50,6 +52,7 @@ class TarefaUnicaDAO{
             $ps->execute([$id]);
             return $ps->fetch();
         }catch(Exception $e){
+            http_response_code(500);
             echo('Não foi possível buscar a tarefa');
         }
     }
@@ -61,6 +64,7 @@ class TarefaUnicaDAO{
             $ps = $pdo->prepare($sql);
             return $ps->execute([$id]);
         }catch(Exception $e){
+            http_response_code(500);
             echo('Não foi possível excluir a tarefa');
         }
     }
@@ -72,6 +76,7 @@ class TarefaUnicaDAO{
             $ps = $pdo->prepare($sql);
             return $ps->execute([$id]);
         }catch(Exception $e){
+            http_response_code(500);
             echo('Não foi possível concluir a tarefa.');
         }
     }
@@ -83,6 +88,7 @@ class TarefaUnicaDAO{
             $ps = $pdo->prepare($sql);
             return $ps->execute([$id]);
         }catch(Exception $e){
+            http_response_code(500);
             echo('Não foi possível desfazer a tarefa.');
         }
     }
@@ -104,16 +110,22 @@ class TarefaUnicaDAO{
                 $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario,$id]);
             }
         }catch(Exception $e){
+            http_response_code(500);
             echo('Não foi possível atualizar a tarefa');
         }
     }
 
     function selecionarTarefasPorPeriodo(string $dataInicial, string $dataFinal){
-        $sql = 'SELECT * FROM tarefa_unica WHERE data BETWEEN ? AND ?';
-        $pdo = criarPDO();
-        $ps = $pdo->prepare($sql);
-        $ps->execute([$dataInicial, $dataFinal]);
-        return $ps->fetchAll();
+        try{
+            $sql = 'SELECT * FROM tarefa_unica WHERE data BETWEEN ? AND ?';
+            $pdo = criarPDO();
+            $ps = $pdo->prepare($sql);
+            $ps->execute([$dataInicial, $dataFinal]);
+            return $ps->fetchAll();
+        }catch(Exception $e){
+            http_response_code(500);
+            echo('Não foi buscar as tarefas');
+        }
     }
 }
 ?>

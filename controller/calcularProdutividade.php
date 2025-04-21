@@ -29,6 +29,6 @@ if($dataInicial != null && $dataFinal != null && $dataInicalDate <= $dataFinalDa
     echo(json_encode($resultado));
 }else{
     http_response_code(400);
-    echo('A data de fim não pode ser anterior a data de início');
+    die('A data de fim não pode ser anterior a data de início');
 }
 ?>
