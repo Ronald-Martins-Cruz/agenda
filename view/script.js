@@ -18,19 +18,22 @@ formProdutividade.addEventListener('submit', async function (e) {
         })
         if (response.ok) {
             const resultado = await response.json();
-            exibirProdutividade(Number(resultado.somaPesoConcluidas),Number(resultado.somaPeso));
+            exibirProdutividade(Number(resultado.somaPesoConcluidas), Number(resultado.somaPeso));
             erroTexto.innerText = "";
             erroTexto.style.display = 'none';
-        }else if(response.status == 400){
+        } else if (response.status == 400) {
             const resultado = await response.text();
             erroTexto.innerText = resultado;
             erroTexto.style.display = 'block';
-        }else if(response.status == 404){
-            exibirProdutividade(0,0);
+        } else if (response.status == 404) {
+            exibirProdutividade(0, 0);
         }
-    } catch(error) {
+    } catch (error) {
     }
 })
+
+document.getElementById('primeiro-dia').addEventListener('change', () => { document.getElementById('submit-calcular').click() })
+document.getElementById('ultimo-dia').addEventListener('change', () => { document.getElementById('submit-calcular').click() })
 
 const concluirTarefa = async (id, tipo) => {
     try {
@@ -87,8 +90,8 @@ const desfazerTarefa = async (id, tipo) => {
 
 const inputHorarioAtualizar = document.getElementById('horarioAtualizar');
 
-document.getElementById('qualquerAtualizar').addEventListener('change', () => {requeridoAtualizar('qualquer')});
-document.getElementById('especificoAtualizar').addEventListener('change', () => {requeridoAtualizar('especifico')});
+document.getElementById('qualquerAtualizar').addEventListener('change', () => { requeridoAtualizar('qualquer') });
+document.getElementById('especificoAtualizar').addEventListener('change', () => { requeridoAtualizar('especifico') });
 
 const requeridoAtualizar = function (tipoHorarioAtualizar) {
     if (tipoHorarioAtualizar == 'especifico') {
@@ -186,12 +189,22 @@ const exibirMes = async (mes, ano) => {
         resultado = await response.json();
 
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao carregar tarefas');
     }
     calendario.innerHTML = "";
     let i = 0;
     somaPesoConcluidas = 0;
     somaPeso = 0;
+    let feriados;
+    let feriadosResponseCode;
+    try {
+        url = 'https://brasilapi.com.br/api/feriados/v1/' + anoNoButton.innerText;
+        const response = await fetch(url);
+        feriados = await response.json();
+        feriadosResponseCode = response.status;
+    } catch (e) {
+        console.error('Erro ao consultar feriados');
+    }
     for (let data = new Date(dataInicial.getTime()); data <= dataFinal; data.setDate(data.getDate() + 1)) {
         const anoData = data.getFullYear();
         const mesData = String(data.getMonth() + 1).padStart(2, '0');
@@ -206,12 +219,25 @@ const exibirMes = async (mes, ano) => {
 
         iesimoDia.dataset.dia = `${anoData}-${mesData}-${diaData}`;
 
-        iesimoDia.addEventListener('click', () => {
-            criarTarefa.style.display = 'block';
-            formCriar.reset();
-            inputHorario.style.display = 'none';
-            const dataForm = document.querySelector('#dataInicial');
-            dataForm.value = iesimoDia.dataset.dia;
+        iesimoDia.addEventListener('click', (e) => {
+            let naoEFeriado = true;
+            let target = e.target;
+            while(!target.classList.contains('dia')){
+                if(target.classList.contains('feriado')){
+                    naoEFeriado = false;
+                    k = -1;
+                }
+                    target = target.parentNode;
+                    i++;
+            }
+            if(naoEFeriado){
+                criarTarefa.style.display = 'block';
+                formCriar.reset();
+                document.querySelector('.erro-criar').style.display = 'none';
+                inputHorario.style.display = 'none';
+                const dataForm = document.querySelector('#dataInicial');
+                dataForm.value = iesimoDia.dataset.dia;
+            }
         })
 
 
@@ -223,8 +249,27 @@ const exibirMes = async (mes, ano) => {
         }
         numeroDia.innerText = data.getDate();
 
+        if (feriadosResponseCode == 200) {
+            const dataAtual = '' + data.getFullYear() + "-" +
+                (Number(data.getMonth()) + 1).toString().padStart(2, '0') +
+                "-" + data.getDate().toString().padStart(2, '0');
+                console.log(dataAtual);
+            for(let i = 0; i < feriados.length; i++){
+                console.log(feriados[i].name  +  " " + feriados[i].date);
+                if(feriados[i].date == dataAtual){
+                    const divFeriado = document.createElement('div');
+                    divFeriado.classList.add("feriado");
+                    const nomeDoFeriado = document.createElement('p');
+                    nomeDoFeriado.classList.add('nome');
+                    nomeDoFeriado.innerText = feriados[i].name;
+                    divFeriado.title = feriados[i].name;
+                    divFeriado.appendChild(nomeDoFeriado);
+                    scrolavel.appendChild(divFeriado);
+                }
+            }
+            console.log("\n\n\n");
+        }
         iesimoDia.appendChild(numeroDia);
-
         resultado['unica'][i].forEach(tarefa => {
             somaPeso += Number(tarefa.peso);
             if (tarefa.concluida)
@@ -232,6 +277,7 @@ const exibirMes = async (mes, ano) => {
             montarTarefa(scrolavel, tarefa);
         }
         )
+
         criarLegenda(i, iesimoDia);
         i++;
 
@@ -346,7 +392,7 @@ function eventoAbrirAtualizar(divTarefa) {
 }
 
 function exibirProdutividade(numerador, denominador, mesCompleto) {
-    if(mesCompleto){
+    if (mesCompleto) {
         document.getElementById('primeiro-dia').value = anoNoButton.innerText + "-"
             + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0')
             + "-01";
@@ -354,11 +400,11 @@ function exibirProdutividade(numerador, denominador, mesCompleto) {
             + String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0') + "-"
             + diasDoMes(String(1 + mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase())).padStart(2, '0'), anoNoButton.innerText);
     }
-    if(denominador == 0){
+    if (denominador == 0) {
         erroTexto.innerText = "Não há nenhuma tarefa no período selecionado";
         erroTexto.style.display = 'block';
         document.querySelector('.porcentagem p').innerText = "0%";
-    }else if (denominador >= 1) {
+    } else if (denominador >= 1) {
         erroTexto.style.display = 'none';
         document.querySelector('.porcentagem p').innerText = Math.round(100 * numerador / denominador) + "%";
     }
@@ -638,7 +684,7 @@ const requerido = function (tipoHorario) {
 
 const criarTarefa = document.querySelector('.criar-tarefa');
 
-let k = 0;
+k = 0;
 
 const header = document.querySelector("header");
 
@@ -698,9 +744,9 @@ function diasDoMes(mes, ano) {
 //exibicao inicial da página
 
 document.addEventListener("DOMContentLoaded", () => {
-    dataAtual = new Date();
-    mes = dataAtual.getMonth();
-    ano = dataAtual.getFullYear();
+    const dataAtual = new Date();
+    const mes = dataAtual.getMonth();
+    const ano = dataAtual.getFullYear();
     mesNoButton.innerText = mesesDoAno[mes].toUpperCase();
     anoNoButton.innerText = ano;
     numeroAno.innerText = dataAtual.getFullYear();
@@ -738,20 +784,28 @@ formCriar.addEventListener('submit', async function (e) {
 
     const formData = new FormData(formCriar);
     const action = formCriar.getAttribute('action');
+    const divErro = document.querySelector('.erro-criar');
 
     try {
         const response = await fetch(action, {
             method: 'POST',
             body: formData
         });
-
+        if(response.status == 400){
+            const resultado = await response.text();
+            throw new Error(resultado);
+        }else if(response.status == 500){
+            throw new Error("Erro no servidor, tente novamente mais tarde")
+        }
         exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
         criarTarefa.style.display = 'none';
         k = 200;
-
+        divErro.style.display = 'none';
         formCriar.reset();
     } catch (error) {
-        console.error('Erro ao enviar formulário.');
+        console.error(error.message);
+        divErro.innerText = error.message;
+        divErro.style.display = 'block';
     }
 });
 

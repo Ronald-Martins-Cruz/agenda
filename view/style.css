@@ -21,6 +21,12 @@
     display: none;
 }
 
+.credito{
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
 /*
 
 
@@ -262,6 +268,9 @@ header button {
     width: 95%;
     overflow: auto;
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .tarefa{
@@ -278,12 +287,24 @@ header button {
     justify-content: space-between;
 }
 
+.feriado{
+    width: 95%;
+    height: 20px;
+    background-color: rgb(209, 134, 43);;
+    color: white; 
+    user-select: none;
+    border-radius: 3px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .nome {
     white-space: nowrap;
     overflow: hidden; 
-    text-overflow: ellipsis; 
-    max-width: 90%; 
-    display: block; 
+    text-overflow: ellipsis;
+    max-width: 90%;
     text-align: center;
     margin: 0;
 }
@@ -348,6 +369,7 @@ header button {
     padding: 20px;
     z-index: 1;
     display: none;
+    overflow: auto;
 }
 
 .atualizar-tarefa{
@@ -546,6 +568,14 @@ input[type="radio"] {
     width: 15px;
 }
 
+.erro-criar{
+    display: none;
+    color: red;
+    font-size: .9rem;
+    text-align: center;
+    margin-top: 10px;
+}
+
 /*               ESTILIZANDO DIV CALCULO                    */
 
 .calculo{
@@ -591,6 +621,7 @@ input[type="radio"] {
     background: linear-gradient(45deg, blueviolet, red);
     text-align: center;
     border: none;
+    margin-top: 20px;
 }
 
 .porcentagem p {
@@ -626,8 +657,11 @@ input[type="radio"] {
     width: 80%;
     font-size: 0.8rem;
     color: red;
-    margin-bottom: 15px;
     text-align: center;
     display: none;
+    margin-top: 20px;
 }
 
+#submit-calcular{
+    display: none;
+}

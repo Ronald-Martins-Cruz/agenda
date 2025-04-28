@@ -21,7 +21,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['repeticao']) && $_POST['r
         http_response_code(400);
         die("A data deve ser posterior ao ano 1000");
     }
-    $peso = htmlspecialchars(isset($_POST['peso'])? $_POST['peso']: 0);
+    $peso = htmlspecialchars(isset($_POST['peso'])? $_POST['peso']: -1);
     if(!is_numeric($peso) || $peso < 0 || $peso > 9999){
         http_response_code(400);
         die("Peso deve ser um número entre 0 e 9999");

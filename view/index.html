@@ -11,7 +11,6 @@
 </head>
 
 <body>
-
     <header>
         <h1><img src="imagens/agenda-icon2.png">
             <p>Agenda</p>
@@ -54,6 +53,7 @@
 
     <div class="container">
         <div class="calculo">
+            <p class="credito">Desenvolvido por: <a href="https://www.linkedin.com/in/ronald-m-cruz/">Ronald Martins Cruz</a></p>
             <h2>PRODUTIVIDADE</h2>
             <form method="get" action="/controller/calcularProdutividade.php" id="calcular-produtividade">
                 <div class="datas">
@@ -69,7 +69,7 @@
                 <!--<select name="tipoDeTarefa" id="tipoDeTarefa">
                 <option value="todas">Todas as tarefas</option>
             </select>-->
-                <button type="submit">Calcular</button>
+                <button type="submit" id="submit-calcular">Calcular</button>
                 <p class="erro-produtividade"></p>
             </form>
             <div class="porcentagem">
@@ -135,6 +135,7 @@
             <input type="date" name="dataInicial" id="dataInicial" required>
 
             <button type="submit" id="criar">Criar Tarefa</button>
+            <div class="erro-criar"></div>
         </form>
     </div>
 
