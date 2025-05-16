@@ -37,7 +37,7 @@ abstract class Tarefa{
         return $this->horario;
     }
 
-    public function setHorario(\DateTime $horario): void {
+    public function setHorario(?\DateTime $horario): void {
         $this->horario = $horario;
     }
 

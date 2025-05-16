@@ -14,13 +14,13 @@ class TarefaUnica extends Tarefa{
         $this->concluida = $concluida;
     }
 
-    public function __construct(String $nome, String $descricao, \DateTime $dataInicial, float $peso,
-        \Datetime $horario = new \DateTime('1000-12-25 00:00:00')){
+    public function __construct(String $nome, String $descricao, \DateTime $dataInicial, float $peso, ?\DateTime $horario = null){
         $this->setNome($nome);
         $this->setDescricao($descricao);
         $this->setDataInicial($dataInicial);
         $this->setPeso($peso);
         $this->setHorario($horario);
+        $this->setHorario($horario ?? new \DateTime('1000-12-25 00:00:00'));
     }
 }
 ?>

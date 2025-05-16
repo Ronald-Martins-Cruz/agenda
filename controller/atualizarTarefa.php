@@ -3,8 +3,6 @@ namespace controller;
 require_once __DIR__ . '/../autoload.php';
 use model\TarefaUnica;
 
-file_put_contents('log.txt', print_r($_POST, true));
-
 $metodo = $_SERVER['REQUEST_METHOD'];
 $tipoRepeticao = htmlspecialchars((isset($_POST['tipoDeRepeticao']))?$_POST['tipoDeRepeticao']: '');
 
@@ -25,8 +23,5 @@ if($metodo === 'POST' && $tipoRepeticao === 'unica'){
     $tarefaUnicaDao = new TarefaUnicaDAO();
     $tarefaUnicaDao->atualizarTarefa($id,$tarefaUnica);
 }
-
-
-
 
 ?>

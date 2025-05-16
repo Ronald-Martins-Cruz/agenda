@@ -6,7 +6,7 @@ let somaPeso = 0;
 const formProdutividade = document.getElementById('calcular-produtividade');
 const erroTexto = document.querySelector('.erro-produtividade');
 
-formProdutividade.addEventListener('submit', async function (e) {
+formProdutividade.addEventListener('submit', async function (e){
     e.preventDefault();
     const formData = new FormData(formProdutividade);
     const dataInicial = document.getElementById('primeiro-dia').value;
@@ -191,7 +191,7 @@ const exibirMes = async (mes, ano) => {
     } catch (error) {
         console.error('Erro ao carregar tarefas');
     }
-    calendario.innerHTML = "";
+    const fragment = document.createDocumentFragment();
     let i = 0;
     somaPesoConcluidas = 0;
     somaPeso = 0;
@@ -200,8 +200,16 @@ const exibirMes = async (mes, ano) => {
     try {
         url = 'https://brasilapi.com.br/api/feriados/v1/' + anoNoButton.innerText;
         const response = await fetch(url);
-        feriados = await response.json();
         feriadosResponseCode = response.status;
+        feriados = await response.json();
+        if(Number(mes) === 11){
+            const responseAnoSeguinte = await fetch('https://brasilapi.com.br/api/feriados/v1/' + (Number(anoNoButton.innerText) + 1));
+            if(responseAnoSeguinte.status != 200){
+                feriadosResponseCode = responseAnoSeguinte;
+            }
+            const resultadoAnoSeguinte = await responseAnoSeguinte.json();
+            feriados = feriados.concat(resultadoAnoSeguinte);
+        }
     } catch (e) {
         console.error('Erro ao consultar feriados');
     }
@@ -215,8 +223,6 @@ const exibirMes = async (mes, ano) => {
         scrolavel.classList.add("scrolavel");
         iesimoDia.appendChild(scrolavel);
 
-
-
         iesimoDia.dataset.dia = `${anoData}-${mesData}-${diaData}`;
 
         iesimoDia.addEventListener('click', (e) => {
@@ -227,19 +233,19 @@ const exibirMes = async (mes, ano) => {
                     naoEFeriado = false;
                     k = -1;
                 }
-                    target = target.parentNode;
-                    i++;
+                target = target.parentNode;
+                i++;
             }
             if(naoEFeriado){
                 criarTarefa.style.display = 'block';
                 formCriar.reset();
                 document.querySelector('.erro-criar').style.display = 'none';
                 inputHorario.style.display = 'none';
+                inputHorario.removeAttribute("required");
                 const dataForm = document.querySelector('#dataInicial');
                 dataForm.value = iesimoDia.dataset.dia;
             }
         })
-
 
         const numeroDia = document.createElement("p");
         if (data.getMonth() != mes) {
@@ -253,9 +259,7 @@ const exibirMes = async (mes, ano) => {
             const dataAtual = '' + data.getFullYear() + "-" +
                 (Number(data.getMonth()) + 1).toString().padStart(2, '0') +
                 "-" + data.getDate().toString().padStart(2, '0');
-                console.log(dataAtual);
             for(let i = 0; i < feriados.length; i++){
-                console.log(feriados[i].name  +  " " + feriados[i].date);
                 if(feriados[i].date == dataAtual){
                     const divFeriado = document.createElement('div');
                     divFeriado.classList.add("feriado");
@@ -267,7 +271,6 @@ const exibirMes = async (mes, ano) => {
                     scrolavel.appendChild(divFeriado);
                 }
             }
-            console.log("\n\n\n");
         }
         iesimoDia.appendChild(numeroDia);
         resultado['unica'][i].forEach(tarefa => {
@@ -281,8 +284,9 @@ const exibirMes = async (mes, ano) => {
         criarLegenda(i, iesimoDia);
         i++;
 
-        calendario.appendChild(iesimoDia);
+        fragment.appendChild(iesimoDia);
     }
+    calendario.replaceChildren(fragment);
     exibirProdutividade(somaPesoConcluidas, somaPeso, true);
 }
 
@@ -422,11 +426,8 @@ calendario.addEventListener("click", async function (event) {
             const response = await fetch(`/controller/excluirTarefa.php?id=${tarefaId}&tipo=${tipo}`, {
                 method: "DELETE"
             });
-
             const data = await response.json();
-            mes = mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase());
-            ano = anoNoButton.innerText;
-            exibirMes(mes, ano);
+            tarefa.style.display = 'none';
         } catch (error) {
             console.error("Erro ao excluir:", error);
         }
