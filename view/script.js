@@ -426,9 +426,7 @@ calendario.addEventListener("click", async function (event) {
             const response = await fetch(`/controller/excluirTarefa.php?id=${tarefaId}&tipo=${tipo}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            desfazerTarefa(tarefaId, tipo);
-            tarefa.style.display = 'none';
+            exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
         } catch (error) {
             console.error("Erro ao excluir:", error);
         }
