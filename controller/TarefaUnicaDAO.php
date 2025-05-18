@@ -12,17 +12,17 @@ class TarefaUnicaDAO{
         try{
             $pdo = criarPDO();
             if($tarefaUnica->getHorario()->format('Y-m-d H:i:s') == '1000-12-25 00:00:00'){
-                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso) VALUES (?,?,?,?)';
+                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,concluida) VALUES (?,?,?,?,?)';
                 $ps = $pdo->prepare($sql);
                 $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
-                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso()]);
+                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),false]);
 
             }else{
-                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario) VALUES (?,?,?,?,?)';
+                $sql = 'INSERT INTO tarefa_unica(nome,descricao,data,peso,horario,concluida) VALUES (?,?,?,?,?,?)';
                 $ps = $pdo->prepare($sql);
                 $dataFormatada = $tarefaUnica->getDataInicial()->format('Y-m-d');
                 $horario = $tarefaUnica->getHorario()->format('H:i:s');
-                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario]);
+                $ps->execute([$tarefaUnica->getNome(),$tarefaUnica->getDescricao(),$dataFormatada,$tarefaUnica->getPeso(),$horario,false]);
             }
         }catch(Exception $e){
             http_response_code(500);
