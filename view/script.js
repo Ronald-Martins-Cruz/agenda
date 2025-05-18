@@ -61,7 +61,7 @@ const concluirTarefa = async (id, tipo) => {
     }
 }
 
-const desfazerTarefa = async (id, tipo) => {
+async function desfazerTarefa(id, tipo){
     try {
         response = await fetch(`/controller/desfazerTarefa.php?id=${id}&tipo=${tipo}`, {
             method: 'PUT',
@@ -427,6 +427,7 @@ calendario.addEventListener("click", async function (event) {
                 method: "DELETE"
             });
             const data = await response.json();
+            desfazerTarefa(tarefaId, tipo);
             tarefa.style.display = 'none';
         } catch (error) {
             console.error("Erro ao excluir:", error);
