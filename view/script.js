@@ -256,7 +256,7 @@ const exibirMes = async (mes, ano) => {
     exibirFeriados(dataInicial, dataFinal);
 }
 
-async function exibirFeriados(dataInicial, dataFinalg) {
+async function exibirFeriados(dataInicial, dataFinal) {
     let feriados;
     let feriadosResponseCode;
     try {
