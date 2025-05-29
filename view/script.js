@@ -264,7 +264,7 @@ async function exibirFeriados(dataInicial, dataFinal) {
         const response = await fetch(url);
         feriadosResponseCode = response.status;
         feriados = await response.json();
-        if (Number(mes) === 11) {
+        if (mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()) === 11) {
             const responseAnoSeguinte = await fetch('https://brasilapi.com.br/api/feriados/v1/' + (Number(anoNoButton.innerText) + 1));
             if (responseAnoSeguinte.status != 200) {
                 feriadosResponseCode = responseAnoSeguinte;
