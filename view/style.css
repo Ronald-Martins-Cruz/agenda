@@ -25,12 +25,14 @@
     position: absolute;
     bottom: 15px;
     left: 15px;
+    width: 90%;
 }
 
 .desenvolvimento{
     position: absolute;
-    bottom: 30px;
+    bottom: 75px;
     left: 15px;
+    width: 90%;
 }
 
 /*
@@ -214,6 +216,7 @@ header button {
 }
 
 .calculo{
+    position: relative;
     background: var(--background-color-header);
     height: calc(100vh - var(--altura-header));
     width: 20%;
