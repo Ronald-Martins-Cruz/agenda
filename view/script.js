@@ -289,7 +289,7 @@ async function exibirFeriados() {
                     nomeDoFeriado.innerText = feriados[i].name;
                     divFeriado.title = feriados[i].name;
                     divFeriado.appendChild(nomeDoFeriado);
-                    const scrolavel = document.querySelector(`[data-dia="${dia}"] .scrolavel`);
+                    const scrolavel = document.querySelector(`[data-dia="${dataAtual}"] .scrolavel`);
                     scrolavel.appendChild(divFeriado);
                 }
             }
