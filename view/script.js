@@ -6,7 +6,7 @@ let somaPeso = 0;
 const formProdutividade = document.getElementById('calcular-produtividade');
 const erroTexto = document.querySelector('.erro-produtividade');
 
-formProdutividade.addEventListener('submit', async function (e){
+formProdutividade.addEventListener('submit', async function (e) {
     e.preventDefault();
     const formData = new FormData(formProdutividade);
     const dataInicial = document.getElementById('primeiro-dia').value;
@@ -61,7 +61,7 @@ const concluirTarefa = async (id, tipo) => {
     }
 }
 
-async function desfazerTarefa(id, tipo){
+async function desfazerTarefa(id, tipo) {
     try {
         response = await fetch(`/controller/desfazerTarefa.php?id=${id}&tipo=${tipo}`, {
             method: 'PUT',
@@ -184,7 +184,7 @@ const exibirMes = async (mes, ano) => {
         });
 
         if (!response.ok) {
-            throw new Error('Erro ao obter dados do PHP');
+            throw new Error();
         }
         resultado = await response.json();
 
@@ -195,24 +195,6 @@ const exibirMes = async (mes, ano) => {
     let i = 0;
     somaPesoConcluidas = 0;
     somaPeso = 0;
-    let feriados;
-    let feriadosResponseCode;
-    try {
-        url = 'https://brasilapi.com.br/api/feriados/v1/' + anoNoButton.innerText;
-        const response = await fetch(url);
-        feriadosResponseCode = response.status;
-        feriados = await response.json();
-        if(Number(mes) === 11){
-            const responseAnoSeguinte = await fetch('https://brasilapi.com.br/api/feriados/v1/' + (Number(anoNoButton.innerText) + 1));
-            if(responseAnoSeguinte.status != 200){
-                feriadosResponseCode = responseAnoSeguinte;
-            }
-            const resultadoAnoSeguinte = await responseAnoSeguinte.json();
-            feriados = feriados.concat(resultadoAnoSeguinte);
-        }
-    } catch (e) {
-        console.error('Erro ao consultar feriados');
-    }
     for (let data = new Date(dataInicial.getTime()); data <= dataFinal; data.setDate(data.getDate() + 1)) {
         const anoData = data.getFullYear();
         const mesData = String(data.getMonth() + 1).padStart(2, '0');
@@ -228,15 +210,15 @@ const exibirMes = async (mes, ano) => {
         iesimoDia.addEventListener('click', (e) => {
             let naoEFeriado = true;
             let target = e.target;
-            while(!target.classList.contains('dia')){
-                if(target.classList.contains('feriado')){
+            while (!target.classList.contains('dia')) {
+                if (target.classList.contains('feriado')) {
                     naoEFeriado = false;
                     k = -1;
                 }
                 target = target.parentNode;
                 i++;
             }
-            if(naoEFeriado){
+            if (naoEFeriado) {
                 criarTarefa.style.display = 'block';
                 formCriar.reset();
                 document.querySelector('.erro-criar').style.display = 'none';
@@ -255,23 +237,6 @@ const exibirMes = async (mes, ano) => {
         }
         numeroDia.innerText = data.getDate();
 
-        if (feriadosResponseCode == 200) {
-            const dataAtual = '' + data.getFullYear() + "-" +
-                (Number(data.getMonth()) + 1).toString().padStart(2, '0') +
-                "-" + data.getDate().toString().padStart(2, '0');
-            for(let i = 0; i < feriados.length; i++){
-                if(feriados[i].date == dataAtual){
-                    const divFeriado = document.createElement('div');
-                    divFeriado.classList.add("feriado");
-                    const nomeDoFeriado = document.createElement('p');
-                    nomeDoFeriado.classList.add('nome');
-                    nomeDoFeriado.innerText = feriados[i].name;
-                    divFeriado.title = feriados[i].name;
-                    divFeriado.appendChild(nomeDoFeriado);
-                    scrolavel.appendChild(divFeriado);
-                }
-            }
-        }
         iesimoDia.appendChild(numeroDia);
         resultado['unica'][i].forEach(tarefa => {
             somaPeso += Number(tarefa.peso);
@@ -288,6 +253,49 @@ const exibirMes = async (mes, ano) => {
     }
     calendario.replaceChildren(fragment);
     exibirProdutividade(somaPesoConcluidas, somaPeso, true);
+    exibirFeriados(dataInicial, dataFinal);
+}
+
+async function exibirFeriados() {
+    let feriados;
+    let feriadosResponseCode;
+    try {
+        url = 'https://brasilapi.com.br/api/feriados/v1/' + anoNoButton.innerText;
+        const response = await fetch(url);
+        feriadosResponseCode = response.status;
+        feriados = await response.json();
+        if (Number(mes) === 11) {
+            const responseAnoSeguinte = await fetch('https://brasilapi.com.br/api/feriados/v1/' + (Number(anoNoButton.innerText) + 1));
+            if (responseAnoSeguinte.status != 200) {
+                feriadosResponseCode = responseAnoSeguinte;
+            }
+            const resultadoAnoSeguinte = await responseAnoSeguinte.json();
+            feriados = feriados.concat(resultadoAnoSeguinte);
+        }
+    } catch (e) {
+        console.error('Erro ao consultar feriados');
+    }
+    if (feriadosResponseCode == 200) {
+        for (let data = new Date(dataInicial.getTime()); data <= dataFinal; data.setDate(data.getDate() + 1)) {
+            const dataAtual = '' + data.getFullYear() + "-" +
+                (Number(data.getMonth()) + 1).toString().padStart(2, '0') +
+                "-" + data.getDate().toString().padStart(2, '0');
+            for (let i = 0; i < feriados.length; i++) {
+                if (feriados[i].date == dataAtual) {
+                    const divFeriado = document.createElement('div');
+                    divFeriado.classList.add("feriado");
+                    const nomeDoFeriado = document.createElement('p');
+                    nomeDoFeriado.classList.add('nome');
+                    nomeDoFeriado.innerText = feriados[i].name;
+                    divFeriado.title = feriados[i].name;
+                    divFeriado.appendChild(nomeDoFeriado);
+                    const scrolavel = document.querySelector(`[data-dia="${dia}"] .scrolavel`);
+                    scrolavel.appendChild(divFeriado);
+                }
+            }
+
+        }
+    }
 }
 
 function criarLegenda(iteracao, iesimoDia) {
@@ -791,10 +799,10 @@ formCriar.addEventListener('submit', async function (e) {
             method: 'POST',
             body: formData
         });
-        if(response.status == 400){
+        if (response.status == 400) {
             const resultado = await response.text();
             throw new Error(resultado);
-        }else if(response.status == 500){
+        } else if (response.status == 500) {
             throw new Error("Erro no servidor, tente novamente mais tarde")
         }
         exibirMes(mesesDoAno.indexOf(mesNoButton.innerText.toLowerCase()), anoNoButton.innerText);
