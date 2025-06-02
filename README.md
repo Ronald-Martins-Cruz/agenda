@@ -46,8 +46,10 @@ O cálculo de produtividade é feito fazenddo a divisão entre a soma dos pesos 
 
 ## 📸 Imagens
 
+- Tela Principal
 ![Tela principal](assets/tela-inicial.png)
 
+- Exemplo de validação
 ![Validação](assets/peso-validacao.png)
 
 ## 🧪 Como executar localmente
