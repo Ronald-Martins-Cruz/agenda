@@ -1,11 +1,11 @@
 :root{
     --background-color-header: #F4F3F4;
     --altura-header: 88px;
-    --peso1: #00ff00;
+    /*--peso1: #00ff00;
     --peso2: #158049;
     --peso3: #2E00FF;
     --peso4: #FF7000;
-    --peso5: #ff0000;
+    --peso5: #ff0000;*/
     --background-color-feriado: rgb(209, 134, 43);
     --background-color-criar-tarefa: #D0D4DB;
 }
@@ -418,11 +418,6 @@ header button {
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
-}
-
-.criar-tarefa button:hover,
-.atualizar-tarefa button:hover {
-    background: #0056b3;
 }
 
 .campo-texto, 
