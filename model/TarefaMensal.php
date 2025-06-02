@@ -3,7 +3,7 @@
 namespace model;
 require_once 'Tarefa.php';
 
-class TarefaMensal extends Tarefa implements ProdutividadeMensuravel{
+class TarefaMensal extends Tarefa{
     private array $diasDoMes;
     private \DateTime $dataFinal;
     private int $qtdConclusoes;

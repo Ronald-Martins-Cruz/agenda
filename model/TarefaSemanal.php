@@ -3,7 +3,7 @@
 namespace model;
 
 
-class TarefaSemanal extends Tarefa implements ProdutividadeMensuravel{
+class TarefaSemanal extends Tarefa{
     private array $diasDaSemana;
     private \DateTime $dataFinal;
     private int $qtdConclusoes;

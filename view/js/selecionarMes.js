@@ -1,5 +1,6 @@
 export const mesesDoAno = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
+
 //manipulando button para selecionar mês
 
 const selecionarMes = document.querySelector('.selecionar-mes');
@@ -29,7 +30,9 @@ document.addEventListener('click', (event) => {
 
 //selecionando os meses e ano clicando
 
-Array.from(meses.children).forEach(child => {
+async function criarEventosButton() {
+    const { exibirMes } = await import('./exibirMes.js');
+    Array.from(meses.children).forEach(child => {
     if (child.tagName.toLowerCase() == 'p') {
         child.addEventListener('click', () => {
             switch (child.innerText) {
@@ -99,7 +102,11 @@ Array.from(meses.children).forEach(child => {
 
         })
     }
-})
+})  
+}
+
+criarEventosButton();
+
 
 // setas para ir e voltar
 // somar e diminuir meses
@@ -119,7 +126,8 @@ ir.addEventListener('mouseout', () => {
     setaFrente.src = 'imagens/seta.png';
 })
 
-ir.addEventListener('click', () => {
+ir.addEventListener('click', async() => {
+    const { exibirMes } = await import('./exibirMes.js');
     for (let i = 0; i < mesesDoAno.length; i++) {
         const mes = mesesDoAno[i];
         if (mes.toLowerCase() == mesNoButton.innerText.toLowerCase() && mesNoButton.innerText.toLowerCase() != 'dezembro') {
@@ -147,8 +155,9 @@ voltar.addEventListener('mouseout', () => {
     setaTras.src = 'imagens/seta.png';
 })
 
-voltar.addEventListener('click', () => {
+voltar.addEventListener('click', async() => {
     let passouNoElse = false;
+    const { exibirMes } = await import('./exibirMes.js');
     mesesDoAno.forEach((mes, i) => {
         if (mes.toLowerCase() == mesNoButton.innerText.toLowerCase() && mesNoButton.innerText.toLowerCase() != 'janeiro' && !passouNoElse) {
             let j = i - 1;
